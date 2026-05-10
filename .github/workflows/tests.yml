@@ -35,14 +35,14 @@ jobs:
 
     steps:
       - name: Checkout phpBB
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: phpbb/phpbb
           ref: ${{ env.PHPBB_BRANCH }}
           path: phpBB3
 
       - name: Checkout extension
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: phpBB3/phpBB/ext/${{ env.EXTNAME }}
 
@@ -149,14 +149,14 @@ jobs:
 
     steps:
       - name: Checkout phpBB
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: phpbb/phpbb
           ref: ${{ env.PHPBB_BRANCH }}
           path: phpBB3
 
       - name: Checkout extension
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: phpBB3/phpBB/ext/${{ env.EXTNAME }}
 
@@ -225,7 +225,7 @@ jobs:
 
       - name: Send code coverage
         if: ${{ matrix.COVERAGE == 1 }}
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           file: ./phpBB3/build/logs/clover.xml
   # END MySQL and MariaDB Job
@@ -274,14 +274,14 @@ jobs:
 
     steps:
       - name: Checkout phpBB
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: phpbb/phpbb
           ref: ${{ env.PHPBB_BRANCH }}
           path: phpBB3
 
       - name: Checkout extension
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: phpBB3/phpBB/ext/${{ env.EXTNAME }}
 
@@ -356,14 +356,14 @@ jobs:
 
     steps:
       - name: Checkout phpBB
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: phpbb/phpbb
           ref: ${{ env.PHPBB_BRANCH }}
           path: phpBB3
 
       - name: Checkout extension
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: phpBB3/phpBB/ext/${{ env.EXTNAME }}
 
