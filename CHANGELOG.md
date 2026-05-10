@@ -1,6 +1,7 @@
 # Ultimate Points Extension Changelog
 
-## Changes in 1.3.2 (Phase D — read switchover, slices 1 & 2)
+## Changes in 1.3.2 (Phase D — read switchover, slices 1, 2 & 3)
+- **Leaderboard semantic change** (slice 3): the index-page "richest users" ranking now sorts by *wallet only*, not "wallet + bank holdings" combined. Bank holdings are no longer joined into the ranking SQL — `phpbb_points_bank.holding` becomes unreliable once Phase E drops dual-write, and the spec calls for resolving bank balance via bbAccounts per-row in the template if it ever needs to surface in the leaderboard. `phpbb_users.user_points` remains the sort cache (maintained by Phase B-2 dual-write today, by `post_to_ledger` directly in Phase E).
 - Navbar `USER_POINTS` template variable now reads from the bbAccounts ledger when the integration is fully wired (bbAccounts installed + `user_wallets` role mapped + Phase C backfill complete). Falls back to the legacy `phpbb_users.user_points` column whenever any of those preconditions is missing or the ledger call throws — admins can disable the integration mid-flight without breaking displays.
 - Member profile `USER_PROF_POINTS` and post-row `points` template variables now use the same auto-detect read path. Per-row cost in topic view is one indexed `SELECT` on `bbaccounts_journal_lines` per visible poster; a future ledger batch method (`get_subledger_balances($account, $user_ids)`) will collapse N queries per page into 1.
 - New `wallet_balance($user_id, $legacy_value)` helper in `event/listener.php` centralises the auto-detect read.

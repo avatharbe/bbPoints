@@ -230,19 +230,25 @@ class listener implements EventSubscriberInterface
 			$bankusers = $b_row['total_users'];
 			$this->db->sql_freeresult($result);
 
-			// Create richest users - cash and bank
+			// Create richest users — wallet ranking.
+			//
+			// Phase D-3: bank.holding dropped from the leaderboard query.
+			// `phpbb_users.user_points` is the sort cache (maintained by
+			// Phase B-2 dual-write today, and by post_to_ledger directly
+			// once Phase E removes the legacy add_points/substract_points
+			// calls). Bank balance, if it ever needs to surface in the
+			// per-row template, is fetched on demand via bbAccounts'
+			// `get_subledger_balance($bank_account_id, $user_id)`.
+			//
+			// Semantic note: the leaderboard now ranks by *wallet only*,
+			// not "total worth = wallet + bank". This is intentional and
+			// matches how every other read site treats wallet and bank
+			// as independently-reportable balances.
 			$limit = $points_values['number_show_top_points'];
 			$sql_array = [
-				'SELECT' => 'u.user_id, u.username, u.user_colour, u.user_points, u.user_avatar, u.user_avatar_type, u.user_avatar_height, u.user_avatar_width, b.holding',
-
+				'SELECT' => 'u.user_id, u.username, u.user_colour, u.user_points, u.user_avatar, u.user_avatar_type, u.user_avatar_height, u.user_avatar_width',
 				'FROM' => [
 					USERS_TABLE => 'u',
-				],
-				'LEFT_JOIN' => [
-					[
-						'FROM' => [$this->points_bank_table => 'b'],
-						'ON' => 'u.user_id = b.user_id'
-					]
 				],
 			];
 			$sql = $this->db->sql_build_query('SELECT', $sql_array);
@@ -257,9 +263,9 @@ class listener implements EventSubscriberInterface
 			// Loop all users array to escape the 0 points users
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				if ($row['user_points'] > 0 || $row['holding'] > 0) //let away beggars
+				if ($row['user_points'] > 0) //let away beggars
 				{
-					$total_points = $row['user_points'] + $row['holding'];
+					$total_points = $row['user_points'];
 					$index = $row['user_id'];
 					$rich_users[$index] = ['total_points' => $total_points, 'user_avatar' => $row['user_avatar'], 'user_avatar_type' => $row['user_avatar_type'], 'user_avatar_height' => $row['user_avatar_height'], 'user_avatar_width' => $row['user_avatar_width'], 'username' => $row['username'], 'user_colour' => $row['user_colour'], 'user_id' => $index];
 					$rich_users_sort[$index] = $total_points;
