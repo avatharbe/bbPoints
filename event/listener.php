@@ -371,8 +371,8 @@ class listener implements EventSubscriberInterface
 		$points_config = $this->cache->get('points_config');
 		$points_values = $this->cache->get('points_values');
 
-		// Grab user's points on hand
-		$user_points = $member['user_points'];
+		// Grab user's points on hand. Phase D — bbAccounts wallet read with auto-detect fallback.
+		$user_points = $this->wallet_balance((int) $user_id, $member['user_points']);
 
 		// Grab user's bank holdings
 		$sql = 'SELECT holding
@@ -505,7 +505,11 @@ class listener implements EventSubscriberInterface
 		}
 
 		$rowset_data = array_merge($rowset_data, [
-			'points' => $row['user_points'],
+			// Phase D — bbAccounts wallet read with auto-detect fallback.
+			// Per-row cost is one indexed SELECT on bbaccounts_journal_lines.
+			// Future optimization: ledger->get_subledger_balances($acct, $user_ids)
+			// batch method to collapse N queries per topic page into 1.
+			'points' => $this->wallet_balance((int) $poster_id, $row['user_points']),
 			'bank_points' => $holding[$poster_id],
 			'points_lock' => $pointslock,
 			'bank_lock' => $banklock,

@@ -1,10 +1,11 @@
 # Ultimate Points Extension Changelog
 
-## Changes in 1.3.2 (Phase D — read switchover, slice 1)
+## Changes in 1.3.2 (Phase D — read switchover, slices 1 & 2)
 - Navbar `USER_POINTS` template variable now reads from the bbAccounts ledger when the integration is fully wired (bbAccounts installed + `user_wallets` role mapped + Phase C backfill complete). Falls back to the legacy `phpbb_users.user_points` column whenever any of those preconditions is missing or the ledger call throws — admins can disable the integration mid-flight without breaking displays.
-- New `wallet_balance($user_id, $legacy_value)` helper in `event/listener.php` centralises the auto-detect read. Per-call cost is one indexed `SELECT` on `bbaccounts_journal_lines (account_id, subledger_user_id)`.
+- Member profile `USER_PROF_POINTS` and post-row `points` template variables now use the same auto-detect read path. Per-row cost in topic view is one indexed `SELECT` on `bbaccounts_journal_lines` per visible poster; a future ledger batch method (`get_subledger_balances($account, $user_ids)`) will collapse N queries per page into 1.
+- New `wallet_balance($user_id, $legacy_value)` helper in `event/listener.php` centralises the auto-detect read.
 - `@?avathar.bbaccounts.service.ledger` injected into the listener service.
-- Profile, post-row, and leaderboard read sites still use the legacy column; subsequent slices (D-2, D-3) will switch them after the navbar slice has been validated.
+- Bank holding reads, leaderboard sort, and aggregate displays (top richest, total points across forum) still use the legacy columns; D-3 will address the leaderboard via a refresh listener that keeps `user_points` populated as a sort cache after Phase E drops dual-write.
 
 ## Changes in 1.3.1
 - bbAccounts integration — Phase C (one-shot, on-demand backfill from existing balances). New section in the ACP "bbAccounts mapping" page lets the admin pick an equity contra account (typically `3010 Opening Balances` from the bbAccounts seed) and run the backfill. For every user with a non-zero `user_points` and/or `phpbb_points_bank.holding`, posts a single multi-line journal entry against the equity account; computes per-leg diffs against the current bbAccounts subledger balance so the operation is correct whether or not Phase B-2 dual-write has already started landing entries. Lottery jackpot gets its own opening entry. Idempotent via the new `ultimatepoints_bbaccounts_backfilled` config flag — the backfill section disappears once it has been run. Reconciliation totals are reported in the success message and the admin log.
