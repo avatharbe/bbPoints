@@ -70,24 +70,15 @@ class listener implements EventSubscriberInterface
 	protected $points_values_table;
 
 	/**
-	 * Constructor
+	 * @var \avathar\bbaccounts\service\ledger|null
 	 *
-	 * @param user $user
-	 * @param template $template
-	 * @param driver_interface $db
-	 * @param config $config
-	 * @param auth $auth
-	 * @param helper $helper
-	 * @param service $cache
-	 * @param request $request
-	 * @param string $root_path
-	 * @param string $php_ext
-	 * @param string $points_bank_table
-	 * @param string $points_config_table
-	 * @param string $points_values_table
-	 *
-	 * @var functions_points $functions_points
+	 * Phase D — bbAccounts read switchover. Wired via `@?` nullable DI;
+	 * present only when bbAccounts is installed. The `wallet_balance()`
+	 * helper auto-detects whether to use it (mapping complete + backfill
+	 * done) and falls back to the legacy column otherwise.
 	 */
+	protected $bbaccounts_ledger;
+
 	public function __construct(
 		functions_points $functions_points,
 		user $user,
@@ -102,7 +93,8 @@ class listener implements EventSubscriberInterface
 		$php_ext,
 		$points_bank_table,
 		$points_config_table,
-		$points_values_table
+		$points_values_table,
+		?\avathar\bbaccounts\service\ledger $bbaccounts_ledger = null
 	)
 	{
 		$this->functions_points = $functions_points;
@@ -119,6 +111,47 @@ class listener implements EventSubscriberInterface
 		$this->points_bank_table = $points_bank_table;
 		$this->points_config_table = $points_config_table;
 		$this->points_values_table = $points_values_table;
+		$this->bbaccounts_ledger = $bbaccounts_ledger;
+	}
+
+	/**
+	 * Phase D — wallet balance read with auto-detected source.
+	 *
+	 * Returns the User Wallets balance for $user_id from bbAccounts when
+	 * the integration is fully wired (ledger present, wallet role mapped,
+	 * Phase C backfill complete). Falls back to the legacy denormalised
+	 * value otherwise — including any error in the bbAccounts call — so
+	 * admins can disable the integration mid-flight without breaking the
+	 * navbar/profile/post-row displays.
+	 *
+	 * Per-call cost: one indexed SELECT on `bbaccounts_journal_lines`
+	 * filtered by (account_id, subledger_user_id). Acceptable for the
+	 * navbar/profile use case; if the leaderboard ever moves to this
+	 * path it should batch via balance_summary's cache.
+	 *
+	 * @param int   $user_id
+	 * @param mixed $legacy_value Fallback if bbAccounts isn't usable.
+	 * @return string|int|float Same shape as the legacy column.
+	 */
+	protected function wallet_balance($user_id, $legacy_value)
+	{
+		$wallet_account_id = (int) $this->config['ultimatepoints_acct_user_wallets'];
+		if ($this->bbaccounts_ledger === null
+			|| $wallet_account_id === 0
+			|| (int) $this->config['ultimatepoints_bbaccounts_backfilled'] !== 1)
+		{
+			return $legacy_value;
+		}
+
+		try
+		{
+			return $this->bbaccounts_ledger->get_subledger_balance($wallet_account_id, (int) $user_id);
+		}
+		catch (\Throwable $e)
+		{
+			// Soft-fail to legacy value; nothing user-visible breaks.
+			return $legacy_value;
+		}
 	}
 
 	static public function getSubscribedEvents()
@@ -521,7 +554,8 @@ class listener implements EventSubscriberInterface
 				'U_POINTS' => $this->helper->route('dmzx_ultimatepoints_controller'),
 				'U_POINTS_LIST' => $this->helper->route('dmzx_ultimatepoints_list_controller'),
 				'POINTS_LINK' => $this->config['points_name'],
-				'USER_POINTS' => sprintf($this->functions_points->number_format_points($this->user->data['user_points'])),
+				// Phase D — bbAccounts wallet balance when the integration is fully wired; legacy column otherwise.
+				'USER_POINTS' => sprintf($this->functions_points->number_format_points($this->wallet_balance((int) $this->user->data['user_id'], $this->user->data['user_points']))),
 				'S_POINTS_ENABLE' => $this->config['points_enable'],
 				'S_UPLIST_ENABLE' => $points_config['uplist_enable'],
 				'S_USE_POINTS' => $this->auth->acl_get('u_use_points'),

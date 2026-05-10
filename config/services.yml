@@ -18,6 +18,12 @@ services:
       - '%dmzx.ultimatepoints.table.points.bank%'
       - '%dmzx.ultimatepoints.table.points.config%'
       - '%dmzx.ultimatepoints.table.points.values%'
+      # Phase D — bbAccounts read switchover. Nullable: present only when
+      # bbAccounts is installed. The listener auto-detects (mapped + backfilled)
+      # and falls back to the legacy column otherwise. Uses the ledger
+      # service (not balance_summary) because the navbar/profile reads need
+      # wallet-only balances, not per-currency pool aggregates.
+      - '@?avathar.bbaccounts.service.ledger'
     tags:
       - { name: 'event.listener' }
 
