@@ -3,8 +3,7 @@ Ultimate Points for phpBB 3.3
 
 [![Tests](https://github.com/avatharbe/UltimatePoints/actions/workflows/tests.yml/badge.svg)](https://github.com/avatharbe/UltimatePoints/actions/workflows/tests.yml)
 
-
-A point-economy extension for phpBB. Users earn points for posting and registering, hold them in a wallet or interest-bearing bank, and spend them via lottery, robbery, peer-to-peer transfer, attachment downloads, or pay-to-post forums. Originally by dmzx & posey; active code maintenance now happens on the [avatharbe fork](https://github.com/avatharbe/UltimatePoints), while dmzx still publishes the canonical version-check manifest at `dmzx-web.net` (synced to the fork's current release).
+A point-economy extension for phpBB. Users earn points for posting and registering, hold them in a wallet or interest-bearing bank, and spend them via lottery, robbery, peer-to-peer transfer, attachment downloads, or pay-to-post forums. 
 
 **Version:** 1.3.0 (10/05/2026)
 
@@ -34,7 +33,7 @@ A point-economy extension for phpBB. Users earn points for posting and registeri
 
 #### Extension integrations
 All integrations are optional soft dependencies — Ultimate Points works without any of them.
-- [bbAccounts](https://github.com/avatharbe/bbAccounts) (avathar/bbaccounts ≥ 1.3.2-alpha) — double-entry ledger storage. When installed and mapped via the new ACP page, every point movement is also posted as an immutable journal entry; admins get full audit + reporting via the bbAccounts trial balance and reports. See [contrib/specs/2026-05-10-bbaccounts-integration.md](contrib/specs/2026-05-10-bbaccounts-integration.md) and tracking issue [#1](https://github.com/avatharbe/UltimatePoints/issues/1).
+- [bbAccounts](https://github.com/avatharbe/bbAccounts) (avathar/bbaccounts) — double-entry ledger storage. When installed and mapped via the new ACP page, every point movement is also posted as an immutable journal entry; admins get full audit + reporting via the bbAccounts trial balance and reports.
 
 #### Languages
 English
