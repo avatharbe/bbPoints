@@ -1,7 +1,7 @@
 name: Tests
 
 env:
-  EXTNAME: dmzx/Ultimate-Points-Extension # Your extension vendor/package name
+  EXTNAME: dmzx/ultimatepoints # Must match composer.json `name` and the PHP namespace path; Linux CI is case-sensitive.
   SNIFF: 1            # Run code sniffer on your code? 1 or 0
   IMAGE_ICC: 1        # Run icc profile sniffer on your images? 1 or 0
   EPV: 1              # Run EPV (Extension Pre Validator) on your code? 1 or 0
@@ -11,21 +11,23 @@ env:
 on:
   push:
     branches: # Run tests when commits are pushed to these branches in your repo
+      - main
       - master
       - develop
   pull_request: # Run tests when pull requests are made on these branches in your repo
     branches:
+      - main
       - master
       - develop
 
 jobs:
   # START Basic Checks Job (EPV, code sniffer, images check, etc.)
   basic-checks:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         include:
-          - php: '7.1'
+          - php: '8.1'
             db: "none"
             NOTESTS: 1
 
@@ -89,42 +91,30 @@ jobs:
 
   # START MySQL and MariaDB Job
   mysql-tests:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         include:
-          - php: '7.1'
-            db: "mariadb:10.1"
-          - php: '7.1'
-            db: "mariadb:10.2"
-          - php: '7.1'
+          - php: '7.4'
             db: "mariadb:10.3"
-          - php: '7.1'
-            db: "mariadb:10.4"
-          - php: '7.1'
+          - php: '7.4'
             db: "mariadb:10.5"
-          - php: '7.1'
-            db: "mysql:5.6"
+          - php: '7.4'
+            db: "mysql:5.7"
             db_alias: "MyISAM Tests"
             MYISAM: 1
-          - php: '7.1'
-            db: "mysql:5.6"
-          - php: '7.1'
-            db: "mysql:5.7"
-          - php: '7.2'
-            db: "mysql:5.7"
-            COVERAGE: 1
-            db_alias: "mysql:5.7 with Coverage"
-          - php: '7.3'
-            db: "mysql:5.7"
           - php: '7.4'
             db: "mysql:5.7"
           - php: '7.4'
             db: "mysql:8.0"
           - php: '8.0'
-            db: "mysql:5.7"
+            db: "mysql:8.0"
           - php: '8.1'
-            db: "mysql:5.7"
+            db: "mariadb:10.6"
+          - php: '8.1'
+            db: "mysql:8.0"
+            COVERAGE: 1
+            db_alias: "mysql:8.0 with Coverage"
 
     name: PHP ${{ matrix.php }} - ${{ matrix.db_alias != '' && matrix.db_alias || matrix.db }}
 
@@ -169,7 +159,7 @@ jobs:
           MATRIX_DB: ${{ matrix.db }}
         run: |
           db=$(echo "${MATRIX_DB%%:*}")
-          echo "::set-output name=db::$db"
+          echo "db=$db" >> "$GITHUB_OUTPUT"
       - name: Setup PHP
         if: ${{ matrix.COVERAGE != 1 }}
         uses: shivammathur/setup-php@v2
@@ -236,28 +226,24 @@ jobs:
 
   # START PostgreSQL Job
   postgres-tests:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         include:
-          - php: '7.1'
-            db: "postgres:9.5"
-          - php: '7.1'
-            db: "postgres:9.6"
-          - php: '7.1'
-            db: "postgres:10"
-          - php: '7.1'
+          - php: '7.4'
             db: "postgres:11"
-          - php: '7.1'
-            db: "postgres:12"
-          - php: '7.1'
+          - php: '7.4'
             db: "postgres:13"
+          - php: '8.1'
+            db: "postgres:13"
+          - php: '8.1'
+            db: "postgres:15"
 
     name: PHP ${{ matrix.php }} - ${{ matrix.db }}
 
     services:
       postgres:
-        image: ${{ matrix.db != 'postgres:9.5' && matrix.db != 'postgres:9.6' && matrix.db != 'postgres:10' && matrix.db != 'postgres:11' && matrix.db != 'postgres:12' && matrix.db != 'postgres:13' && 'postgres:10' || matrix.db }}
+        image: ${{ matrix.db != 'postgres:11' && matrix.db != 'postgres:13' && matrix.db != 'postgres:15' && 'postgres:13' || matrix.db }}
         env:
           POSTGRES_HOST: localhost
           POSTGRES_USER: postgres
@@ -298,7 +284,7 @@ jobs:
           MATRIX_DB: ${{ matrix.db }}
         run: |
           db=$(echo "${MATRIX_DB%%:*}")
-          echo "::set-output name=db::$db"
+          echo "db=$db" >> "$GITHUB_OUTPUT"
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -334,16 +320,15 @@ jobs:
 
   # START Other Tests Job (SQLite 3 and mssql)
   other-tests:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
     strategy:
       matrix:
         include:
-          - php: '7.1'
+          - php: '7.4'
             db: "sqlite3"
-          - php: '7.2'
-            db: "mcr.microsoft.com/mssql/server:2017-latest"
-            db_alias: 'MSSQL 2017'
-          - php: '7.2'
+          - php: '8.1'
+            db: "sqlite3"
+          - php: '8.1'
             db: "mcr.microsoft.com/mssql/server:2019-latest"
             db_alias: 'MSSQL 2019'
 
@@ -351,7 +336,7 @@ jobs:
 
     services:
       mssql:
-        image: ${{ matrix.db != 'mcr.microsoft.com/mssql/server:2017-latest' && matrix.db != 'mcr.microsoft.com/mssql/server:2019-latest' && 'mcr.microsoft.com/mssql/server:2017-latest' || matrix.db }}
+        image: ${{ matrix.db != 'mcr.microsoft.com/mssql/server:2019-latest' && 'mcr.microsoft.com/mssql/server:2019-latest' || matrix.db }}
         env:
           SA_PASSWORD: "Pssw0rd_12"
           ACCEPT_EULA: "y"
@@ -396,7 +381,7 @@ jobs:
           else
               db=$(echo "${MATRIX_DB%%:*}")
           fi
-          echo "::set-output name=db::$db"
+          echo "db=$db" >> "$GITHUB_OUTPUT"
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:

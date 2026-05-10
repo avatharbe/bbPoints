@@ -50,7 +50,7 @@
 	"extra": {
 		"display-name": "Ultimate Points Extension",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.2.0,<4.0.0@dev"
+			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
 		},
 		"version-check": {
 			"host": "www.dmzx-web.net",

@@ -22,7 +22,7 @@ class ext extends base
 	public function is_enableable()
 	{
 		$config = $this->container->get('config');
-		return version_compare($config['version'], '3.2.0', '>=');
+		return version_compare($config['version'], '3.3.0', '>=');
 	}
 
 	protected static $notification_types = [
