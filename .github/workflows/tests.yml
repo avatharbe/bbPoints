@@ -63,7 +63,10 @@ jobs:
 
       - name: Setup EPV
         if: ${{ env.EPV != 0 }}
-        run: composer require phpbb/epv:dev-master --dev --no-interaction --ignore-platform-reqs
+        # -W (--with-all-dependencies) lets composer adjust transitive deps:
+        # phpbb/epv:dev-master pins nikic/php-parser ^4, but phpBB 3.3.x
+        # ships a lockfile with v5.x. Without -W, the install bails out.
+        run: composer require phpbb/epv:dev-master --dev --no-interaction --ignore-platform-reqs -W
         working-directory: ./phpBB3/phpBB
 
       - name: Run code sniffer
@@ -99,10 +102,6 @@ jobs:
             db: "mariadb:10.3"
           - php: '7.4'
             db: "mariadb:10.5"
-          - php: '7.4'
-            db: "mysql:5.7"
-            db_alias: "MyISAM Tests"
-            MYISAM: 1
           - php: '7.4'
             db: "mysql:5.7"
           - php: '7.4'
@@ -318,7 +317,13 @@ jobs:
         working-directory: ./phpBB3
   # END PostgreSQL Job
 
-  # START Other Tests Job (SQLite 3 and mssql)
+  # START SQLite Tests Job
+  # MSSQL was dropped — phpBB's bundled mssql:2019 healthcheck uses
+  # the deprecated /opt/mssql-tools/bin/sqlcmd path (moved to
+  # /opt/mssql-tools18/bin/sqlcmd in current images), so the container
+  # never goes healthy and kills any combo sharing the service block.
+  # MyISAM was dropped too — phpBB's setup-database.sh runs
+  # SET GLOBAL storage_engine=MyISAM, removed in MySQL 5.7.5+.
   other-tests:
     runs-on: ubuntu-22.04
     strategy:
@@ -328,26 +333,10 @@ jobs:
             db: "sqlite3"
           - php: '8.1'
             db: "sqlite3"
-          - php: '8.1'
-            db: "mcr.microsoft.com/mssql/server:2019-latest"
-            db_alias: 'MSSQL 2019'
 
-    name: PHP ${{ matrix.php }} - ${{ matrix.db_alias != '' && matrix.db_alias || matrix.db }}
+    name: PHP ${{ matrix.php }} - ${{ matrix.db }}
 
     services:
-      mssql:
-        image: ${{ matrix.db != 'mcr.microsoft.com/mssql/server:2019-latest' && 'mcr.microsoft.com/mssql/server:2019-latest' || matrix.db }}
-        env:
-          SA_PASSWORD: "Pssw0rd_12"
-          ACCEPT_EULA: "y"
-        ports:
-          - 1433:1433
-        options: >-
-          --health-cmd="/opt/mssql-tools/bin/sqlcmd -S localhost -U sa -P 'Pssw0rd_12' -Q \"Use [master]; CREATE DATABASE [phpbb_tests] COLLATE Latin1_General_CI_AS\" || exit 1"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-          --health-start-period 10s
       redis:
         image: redis
         options: >-
@@ -375,12 +364,7 @@ jobs:
         env:
           MATRIX_DB: ${{ matrix.db }}
         run: |
-          if [ $MATRIX_DB == 'mcr.microsoft.com/mssql/server:2017-latest' ] || [ $MATRIX_DB == 'mcr.microsoft.com/mssql/server:2019-latest' ]
-          then
-              db='mssql'
-          else
-              db=$(echo "${MATRIX_DB%%:*}")
-          fi
+          db=$(echo "${MATRIX_DB%%:*}")
           echo "db=$db" >> "$GITHUB_OUTPUT"
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
