@@ -825,7 +825,7 @@ class listener implements EventSubscriberInterface
 				$this->functions_points->post_to_ledger('exp_posting', 'user_wallets', $total_points, 'New topic posted', (int) $post_id, 0, (int) $user_id);
 			} // If it's a new post
 			else if (($mode == 'reply' || $mode == 'quote') && $forum['forum_perpost'] > 0)
-				{
+			{
 				// We calculate the total points
 				$words_points = $post_word * $sizeof_msg;
 				$chars_points = $post_char * $chars_msg;
@@ -838,7 +838,7 @@ class listener implements EventSubscriberInterface
 				$this->functions_points->post_to_ledger('exp_posting', 'user_wallets', $total_points, 'New post', (int) $post_id, 0, (int) $user_id);
 			} // If it's a topic edit
 			else if (($mode == 'edit_topic' || $mode == 'edit_first_post') && $forum['forum_peredit'] > 0)
-				{
+			{
 				// We calculate the total points
 				$words_points = $topic_word * $sizeof_msg;
 				$chars_points = $topic_char * $chars_msg;
