@@ -230,6 +230,25 @@ class points_transfer_user
 			// Remove cash from sender
 			$this->functions_points->substract_points($this->user->data['user_id'], $am);
 
+			// bbAccounts dual-write (Phase B-2 slice 2). Single atomic
+			// entry replaces the historic non-atomic add+substract pair —
+			// the bbAccounts side can no longer desync on a crash.
+			// $am is debited from sender; $amount (after fee) is credited
+			// to recipient; the difference is the transfer fee, which
+			// goes to rev_post_costs as a generic recovered-revenue line
+			// (no dedicated transfer-fee role in v1; can split out later
+			// if reports need it).
+			if ($amount == $am)
+			{
+				$this->functions_points->post_to_ledger('user_wallets', 'user_wallets', $am, 'Points transfer', 0, (int) $this->user->data['user_id'], (int) $transfer_user['user_id']);
+			}
+			else
+			{
+				$fee = $am - $amount;
+				$this->functions_points->post_to_ledger('user_wallets', 'user_wallets', $amount, 'Points transfer (after fee)', 0, (int) $this->user->data['user_id'], (int) $transfer_user['user_id']);
+				$this->functions_points->post_to_ledger('user_wallets', 'rev_post_costs', $fee, 'Transfer fee', 0, (int) $this->user->data['user_id'], 0);
+			}
+
 			// Get current time for log
 			$current_time = time();
 

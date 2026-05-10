@@ -465,16 +465,55 @@ class functions_points
 		$time = time();
 		$this->set_points_values('bank_last_restocked', $time);
 
-		// Pay the users
+		// bbAccounts dual-write (Phase B-2 slice 3). Pre-fetch per-user
+		// amounts so we can post one journal entry per affected user
+		// AND keep the existing bulk UPDATE for the legacy column. The
+		// SELECT runs before the UPDATE, so `holding` reflects the
+		// pre-interest balance — the math here mirrors the SQL exactly.
+		// No-op when ledger absent or roles unmapped.
+		$where_interest = 'holding < ' . (int) $points_values['bank_interestcut']
+			. ' OR ' . (int) $points_values['bank_interestcut'] . ' = 0';
+		if ($this->bbaccounts_ledger !== null
+			&& (int) $this->config['ultimatepoints_acct_exp_bank_int'] > 0
+			&& (int) $this->config['ultimatepoints_acct_bank_holdings'] > 0)
+		{
+			$sql = 'SELECT user_id, holding FROM ' . $this->points_bank_table . ' WHERE ' . $where_interest;
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$interest_amount = round($row['holding'] / 100 * $points_values['bank_interest']);
+				if ($interest_amount > 0)
+				{
+					$this->post_to_ledger('exp_bank_int', 'bank_holdings', $interest_amount, 'Bank interest accrual', 0, 0, (int) $row['user_id']);
+				}
+			}
+			$this->db->sql_freeresult($result);
+		}
+
+		// Pay the users (legacy bulk UPDATE — kept until Phase E)
 		$sql = 'UPDATE ' . $this->points_bank_table . '
 			SET holding = holding + round((holding / 100) * ' . $points_values['bank_interest'] . ')
-			WHERE holding < ' . (int) $points_values['bank_interestcut'] . '
-				OR ' . (int) $points_values['bank_interestcut'] . ' = 0';
+			WHERE ' . $where_interest;
 		$this->db->sql_query($sql);
 
 		// Maintain the bank costs
 		if ($points_values['bank_cost'] <> '0')
 		{
+			// bbAccounts dual-write (Phase B-2 slice 3). Same pattern.
+			if ($this->bbaccounts_ledger !== null
+				&& (int) $this->config['ultimatepoints_acct_bank_holdings'] > 0
+				&& (int) $this->config['ultimatepoints_acct_rev_bank_fees'] > 0)
+			{
+				$sql = 'SELECT user_id FROM ' . $this->points_bank_table
+					. ' WHERE holding >= ' . (int) $points_values['bank_cost'];
+				$result = $this->db->sql_query($sql);
+				while ($row = $this->db->sql_fetchrow($result))
+				{
+					$this->post_to_ledger('bank_holdings', 'rev_bank_fees', (int) $points_values['bank_cost'], 'Bank maintenance fee', 0, (int) $row['user_id'], 0);
+				}
+				$this->db->sql_freeresult($result);
+			}
+
 			$sql = 'UPDATE ' . $this->points_bank_table . '
 				SET holding = holding - ' . (int) $points_values['bank_cost'] . '
 				WHERE holding >= ' . (int) $points_values['bank_cost'] . '';
@@ -666,6 +705,8 @@ class functions_points
 
 				// Add jackpot to winner
 				$this->add_points((int) $winner['user_id'], $points_values['lottery_jackpot']);
+				// bbAccounts dual-write (Phase B-2 slice 3). Pool→Winner.
+				$this->post_to_ledger('lottery_pool', 'user_wallets', $points_values['lottery_jackpot'], 'Lottery jackpot payout', 0, 0, (int) $winner['user_id']);
 
 				// Reset jackpot
 				$this->set_points_values('lottery_jackpot', $points_values['lottery_base_amount']);
@@ -849,6 +890,8 @@ class functions_points
 		if ($bonus && $bonus_value)
 		{
 			$this->add_points((int) $user_id, $bonus_value);
+			// bbAccounts dual-write (Phase B-2 slice 3). Random RNG bonus.
+			$this->post_to_ledger('exp_random', 'user_wallets', $bonus_value, 'Random post bonus', (int) $post_id, 0, (int) $user_id);
 
 			// Send out notification
 

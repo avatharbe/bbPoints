@@ -260,6 +260,9 @@ class points_robbery
 			{
 				$this->functions_points->add_points($this->user->data['user_id'], $attacked_amount);
 				$this->functions_points->substract_points($user_id, $attacked_amount);
+				// bbAccounts dual-write (Phase B-2 slice 2). Single atomic
+				// entry — same atomicity bug fix as the transfer flow.
+				$this->functions_points->post_to_ledger('user_wallets', 'user_wallets', $attacked_amount, 'Robbery', 0, (int) $user_id, (int) $this->user->data['user_id']);
 
 				// Add robbery to the log
 				$sql = 'INSERT INTO ' . $this->points_log_table . ' ' . $this->db->sql_build_array('INSERT', [
@@ -310,6 +313,8 @@ class points_robbery
 				{
 					$lose = $attacked_amount / 100 * $points_values['robbery_loose'];
 					$this->functions_points->substract_points($this->user->data['user_id'], $lose);
+					// bbAccounts dual-write (Phase B-2 slice 2). Failed-robbery penalty.
+					$this->functions_points->post_to_ledger('user_wallets', 'rev_penalty', $lose, 'Failed robbery penalty', 0, (int) $this->user->data['user_id'], 0);
 
 					if ($points_config['robbery_notify'])
 					{

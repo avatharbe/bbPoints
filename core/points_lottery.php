@@ -261,11 +261,15 @@ class points_lottery
 			if ($points_config['lottery_enable'] != 0)
 			{
 				// Deduct cost
-				$viewer_cash = $purchaser['user_points'] - ($points_values['lottery_ticket_cost'] * $total_tickets_bought);
+				$ticket_spend = $points_values['lottery_ticket_cost'] * $total_tickets_bought;
+				$viewer_cash = $purchaser['user_points'] - $ticket_spend;
 				$this->functions_points->set_points($this->user->data['user_id'], $viewer_cash);
 
 				// Update jackpot
-				$this->functions_points->set_points_values('lottery_jackpot', $points_values['lottery_jackpot'] + ($points_values['lottery_ticket_cost'] * $total_tickets_bought));
+				$this->functions_points->set_points_values('lottery_jackpot', $points_values['lottery_jackpot'] + $ticket_spend);
+
+				// bbAccounts dual-write (Phase B-2 slice 4). Wallet→Lottery Pool.
+				$this->functions_points->post_to_ledger('user_wallets', 'lottery_pool', $ticket_spend, 'Lottery ticket purchase', 0, (int) $this->user->data['user_id'], 0);
 			}
 
 			// Update mChat with lottery ticket buy

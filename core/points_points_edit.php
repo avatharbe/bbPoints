@@ -140,14 +140,21 @@ class points_points_edit
 				if ($method == 'set')
 				{
 					$this->functions_points->set_points($u_id, $new_points);
+					// bbAccounts: 'set' mode skipped — needs old-balance read + diff
+					// computation to know debit vs. credit direction. TODO: handle in
+					// a follow-up that wraps set_points with diff calculation.
 				} // Or do we add points
 				else if ($method == 'add')
 				{
 					$this->functions_points->add_points($u_id, $new_points);
+					// bbAccounts dual-write (Phase B-2 slice 4). Admin manual award.
+					$this->functions_points->post_to_ledger('exp_admin_award', 'user_wallets', $new_points, 'Admin manual award', 0, 0, (int) $u_id);
 				} // Or do we substract points
 				else if ($method == 'substract')
 				{
 					$this->functions_points->substract_points($u_id, $new_points);
+					// bbAccounts dual-write (Phase B-2 slice 4). Admin manual deduction.
+					$this->functions_points->post_to_ledger('user_wallets', 'rev_admin_down', $new_points, 'Admin manual deduction', 0, (int) $u_id, 0);
 				}
 
 				$sql_array = [

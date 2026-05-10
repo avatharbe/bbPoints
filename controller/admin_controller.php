@@ -373,6 +373,12 @@ class admin_controller
 						SET user_points = user_points + $group_transfer_points
 						WHERE user_id IN ($userdata_group)";
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_GROUP_TRANSFER_ADD');
+					// bbAccounts dual-write (Phase B-2 slice 4). Per-user journal entries
+					// for the group add. We already have the user_ids in $user_ids; loop.
+					foreach ($user_ids as $gid)
+					{
+						$this->functions_points->post_to_ledger('exp_admin_award', 'user_wallets', $group_transfer_points, 'Admin group transfer (add)', 0, 0, (int) $gid);
+					}
 				}
 
 				if ($func == 'substract')
@@ -381,6 +387,12 @@ class admin_controller
 						SET user_points = user_points - $group_transfer_points
 						WHERE user_id IN ($userdata_group)";
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_GROUP_TRANSFER_ADD');
+					// bbAccounts dual-write (Phase B-2 slice 4). Per-user journal entries
+					// for the group subtract.
+					foreach ($user_ids as $gid)
+					{
+						$this->functions_points->post_to_ledger('user_wallets', 'rev_admin_down', $group_transfer_points, 'Admin group transfer (subtract)', 0, (int) $gid, 0);
+					}
 				}
 
 				if ($func == 'set')
@@ -389,6 +401,8 @@ class admin_controller
 						SET user_points = $group_transfer_points
 						WHERE user_id IN ($userdata_group)";
 					$this->log->add('admin', $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_GROUP_TRANSFER_SET');
+					// bbAccounts: 'set' mode skipped — needs per-user diff calculation
+					// (read old balance, compute delta, post directional entry). TODO.
 				}
 
 				$result = $this->db->sql_query($sql);

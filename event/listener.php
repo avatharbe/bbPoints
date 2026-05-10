@@ -592,6 +592,8 @@ class listener implements EventSubscriberInterface
 			if ($this->config['points_enable'])
 			{
 				$this->functions_points->substract_points($this->user->data['user_id'], $forum_cost);
+				// bbAccounts dual-write (Phase B-2 slice 4). Attachment download charge.
+				$this->functions_points->post_to_ledger('user_wallets', 'rev_attach_costs', $forum_cost, 'Attachment download charge', (int) $topic_id, (int) $this->user->data['user_id'], 0);
 			}
 		}
 	}
@@ -704,6 +706,8 @@ class listener implements EventSubscriberInterface
 		{
 			// Substract user's points
 			$this->functions_points->substract_points((int) $event['user_row']['user_id'], $points_values['points_per_warn']);
+			// bbAccounts dual-write (Phase B-2 slice 4). Warning penalty.
+			$this->functions_points->post_to_ledger('user_wallets', 'rev_penalty', $points_values['points_per_warn'], 'Warning point deduction', 0, (int) $event['user_row']['user_id'], 0);
 
 			// Notify the moderator about the additional point deduction
 			$message = $event['message'];
@@ -786,10 +790,14 @@ class listener implements EventSubscriberInterface
 			if ($mode == 'post' && $forum['forum_cost_topic'] > 0 && $this->auth->acl_get('f_pay_topic', (int) $forum_id))
 			{
 				$this->functions_points->substract_points((int) $user_id, $forum['forum_cost_topic']);
+				// bbAccounts dual-write (Phase B-2 slice 4). Pay-to-post forum charge (topic).
+				$this->functions_points->post_to_ledger('user_wallets', 'rev_post_costs', $forum['forum_cost_topic'], 'Pay-to-post topic charge', (int) $forum_id, (int) $user_id, 0);
 			}
 			else if (($mode == 'reply' || $mode == 'quote') && $forum['forum_cost_post'] > 0 && $this->auth->acl_get('f_pay_post', (int) $forum_id))
 			{
 				$this->functions_points->substract_points((int) $user_id, $forum['forum_cost_post']);
+				// bbAccounts dual-write (Phase B-2 slice 4). Pay-to-post forum charge (reply).
+				$this->functions_points->post_to_ledger('user_wallets', 'rev_post_costs', $forum['forum_cost_post'], 'Pay-to-post reply charge', (int) $forum_id, (int) $user_id, 0);
 			}
 
 			// We grab some specific message data

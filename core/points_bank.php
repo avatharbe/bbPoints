@@ -328,6 +328,8 @@ class points_bank
 			}
 
 			$this->functions_points->substract_points($this->user->data['user_id'], $deposit);
+			// bbAccounts dual-write (Phase B-2 slice 3). Wallet→Bank, same user.
+			$this->functions_points->post_to_ledger('user_wallets', 'bank_holdings', $deposit, 'Bank deposit', 0, (int) $this->user->data['user_id'], (int) $this->user->data['user_id']);
 
 			$sql_array = [
 				'SELECT' => 'holding, totaldeposit',
@@ -407,6 +409,8 @@ class points_bank
 
 			// Transfer points to users cash account
 			$this->functions_points->add_points($this->user->data['user_id'], $withdraw);
+			// bbAccounts dual-write (Phase B-2 slice 3). Bank→Wallet, same user.
+			$this->functions_points->post_to_ledger('bank_holdings', 'user_wallets', $withdraw, 'Bank withdrawal', 0, (int) $this->user->data['user_id'], (int) $this->user->data['user_id']);
 
 			// Update users bank account
 			$sql_array = [
