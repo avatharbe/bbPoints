@@ -140,9 +140,6 @@ class points_points_edit
 				if ($method == 'set')
 				{
 					$this->functions_points->set_points($u_id, $new_points);
-					// bbAccounts: 'set' mode skipped — needs old-balance read + diff
-					// computation to know debit vs. credit direction. TODO: handle in
-					// a follow-up that wraps set_points with diff calculation.
 				} // Or do we add points
 				else if ($method == 'add')
 				{

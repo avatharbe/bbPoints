@@ -64,4 +64,5 @@ $lang = array_merge($lang, [
 	'LOG_RESYNC_POINTSCOUNTS' => '<strong>All users points were reset successfully</strong>',
 	'LOG_RESYNC_POINTSLOGSCOUNTS' => '<strong>All user logs were reset successfully</strong>',
 	'LOG_BBACCOUNTS_POST_FAILED' => '<strong>bbAccounts journal entry rejected</strong><br />» role pair: %1$s — %2$s',
+	'LOG_BBACCOUNTS_BACKFILL_DONE' => '<strong>bbAccounts opening-balance backfill ran</strong><br />» %1$d users processed, wallet net %2$s, bank net %3$s, jackpot net %4$s',
 ]);

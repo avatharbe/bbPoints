@@ -264,4 +264,17 @@ $lang = array_merge($lang, [
 	'ACP_POINTS_BBACCOUNTS_ROLE_EXP_RANDOM'       => 'Random bonus on post (expense)',
 	'ACP_POINTS_BBACCOUNTS_ROLE_EXP_BANK_INT'     => 'Bank interest paid out (expense)',
 	'ACP_POINTS_BBACCOUNTS_ROLE_EXP_ADMIN_AWARD'  => 'Admin-add award (expense)',
+
+	// bbAccounts integration — Phase C backfill (1.3.1+)
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_LEGEND'        => 'Backfill from existing balances',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_EXPLAIN'       => 'One-time, on-demand. Posts an opening journal entry to bbAccounts for every user whose current wallet (and bank, if mapped) balance differs from the bbAccounts subledger balance. The contra leg goes to an equity account you pick below. Run this once, after you have mapped the roles above and verified the chart of accounts in bbAccounts. The backfill button disappears once it has been run.',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_DONE_NOTICE'   => 'Opening balances have already been backfilled. From this point on, every UltimatePoints mutation on a mapped role posts a corresponding journal entry; bbAccounts subledger balances stay in sync via the dual-write shim.',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_BLOCKED'       => 'Backfill cannot run yet',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_NEEDS_WALLET'  => 'Map the <em>User Wallets</em> role above before running the backfill — that is the minimum required for an opening entry to be meaningful.',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_NEEDS_EQUITY'  => 'No active equity-type accounts found in bbAccounts. Create at least one equity account (e.g. <em>3010 Opening Balances</em> from the bbAccounts seed) in the bbAccounts ACP, then return here.',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_EQUITY_LABEL'  => 'Equity contra account',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_EQUITY_EXPLAIN'=> 'The equity-type account that the opening balances will be debited against. The default bbAccounts seed includes <em>3010 Opening Balances</em>, which is the conventional choice.',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_RUN'           => 'Run backfill now',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_NO_EQUITY'     => 'Pick an equity account before running the backfill.',
+	'ACP_POINTS_BBACCOUNTS_BACKFILL_SUCCESS'       => 'Backfill complete: %1$d users processed, wallet net %2$s, bank net %3$s, jackpot net %4$s.',
 ]);

@@ -1,5 +1,9 @@
 # Ultimate Points Extension Changelog
 
+## Changes in 1.3.1
+- bbAccounts integration — Phase C (one-shot, on-demand backfill from existing balances). New section in the ACP "bbAccounts mapping" page lets the admin pick an equity contra account (typically `3010 Opening Balances` from the bbAccounts seed) and run the backfill. For every user with a non-zero `user_points` and/or `phpbb_points_bank.holding`, posts a single multi-line journal entry against the equity account; computes per-leg diffs against the current bbAccounts subledger balance so the operation is correct whether or not Phase B-2 dual-write has already started landing entries. Lottery jackpot gets its own opening entry. Idempotent via the new `ultimatepoints_bbaccounts_backfilled` config flag — the backfill section disappears once it has been run. Reconciliation totals are reported in the success message and the admin log.
+- New migration `ultimatepoints_1_3_1.php` adds the backfill state config key and bumps `ultimate_points_version`.
+
 ## Changes in 1.3.0
 - Drop phpBB 3.2 compatibility. Soft-require is now `>=3.3.0,<4.0.0@dev`; tested against phpBB 3.3.16. ext.php enforces `>= 3.3.0`.
 - CI workflow updated for current GitHub Actions: runner bumped from removed `ubuntu-18.04` to `ubuntu-22.04`; `::set-output` migrated to `$GITHUB_OUTPUT`; trigger branches now include `main`; EXTNAME corrected to `dmzx/ultimatepoints` (matches composer + namespace path; Linux CI is case-sensitive). Test matrix trimmed to PHP 7.4–8.1 against MariaDB 10.3+/MySQL 5.7+/Postgres 11+/SQLite/MSSQL 2019.
