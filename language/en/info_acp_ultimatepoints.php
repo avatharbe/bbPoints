@@ -63,4 +63,5 @@ $lang = array_merge($lang, [
 	'LOG_RESYNC_LOTTERY_HISTORY' => '<strong>The lottery history was reset successfully</strong>',
 	'LOG_RESYNC_POINTSCOUNTS' => '<strong>All users points were reset successfully</strong>',
 	'LOG_RESYNC_POINTSLOGSCOUNTS' => '<strong>All user logs were reset successfully</strong>',
+	'LOG_BBACCOUNTS_POST_FAILED' => '<strong>bbAccounts journal entry rejected</strong><br />» role pair: %1$s — %2$s',
 ]);

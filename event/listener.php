@@ -821,6 +821,8 @@ class listener implements EventSubscriberInterface
 				// We add the total points
 				$this->functions_points->add_points($user_id, $total_points); // Add to the user
 				$this->functions_points->add_points_to_table($post_id, $total_points, 'topic', $total_attachments, $total_poll_options); // Add to the post table
+				// bbAccounts dual-write (Phase B-2): no-op when ledger absent or roles unmapped.
+				$this->functions_points->post_to_ledger('exp_posting', 'user_wallets', $total_points, 'New topic posted', (int) $post_id, 0, (int) $user_id);
 			} // If it's a new post
 			else if (($mode == 'reply' || $mode == 'quote') && $forum['forum_perpost'] > 0)
 				{
@@ -832,6 +834,8 @@ class listener implements EventSubscriberInterface
 				// We add the total points
 				$this->functions_points->add_points($user_id, $total_points); // Add to the user
 				$this->functions_points->add_points_to_table($post_id, $total_points, 'post', $total_attachments, 0); // Add to the post table
+				// bbAccounts dual-write (Phase B-2).
+				$this->functions_points->post_to_ledger('exp_posting', 'user_wallets', $total_points, 'New post', (int) $post_id, 0, (int) $user_id);
 			} // If it's a topic edit
 			else if (($mode == 'edit_topic' || $mode == 'edit_first_post') && $forum['forum_peredit'] > 0)
 				{
@@ -856,6 +860,10 @@ class listener implements EventSubscriberInterface
 				{
 					$this->functions_points->add_points($user_id, $difference); // Add to the user
 					$this->functions_points->add_points_to_table($post_id, $total_points, 'topic', $total_attachments, $total_poll_options); // Update to the post table
+					// bbAccounts dual-write (Phase B-2). Posts only the *positive diff* — matches the legacy
+					// "negative diffs are silently dropped" behaviour. Phase E will revisit by posting a
+					// reversal entry for negative diffs instead.
+					$this->functions_points->post_to_ledger('exp_posting', 'user_wallets', $difference, 'Topic edit reward', (int) $post_id, 0, (int) $user_id);
 				}
 				else
 				{
@@ -885,6 +893,8 @@ class listener implements EventSubscriberInterface
 				{
 					$this->functions_points->add_points($user_id, $difference); // Add to the user
 					$this->functions_points->add_points_to_table($post_id, $total_points, 'post', $total_attachments, 0); // Update to the post table
+					// bbAccounts dual-write (Phase B-2). Positive diff only; see topic-edit comment above.
+					$this->functions_points->post_to_ledger('exp_posting', 'user_wallets', $difference, 'Post edit reward', (int) $post_id, 0, (int) $user_id);
 				}
 				else
 				{

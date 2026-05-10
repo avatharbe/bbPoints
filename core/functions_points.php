@@ -246,6 +246,106 @@ class functions_points
 	}
 
 	/**
+	 * Post a balanced journal entry to bbAccounts for a UltimatePoints
+	 * mutation (Phase B-2 dual-write).
+	 *
+	 * Looks up the admin's role-to-account mapping (set in the ACP
+	 * "bbAccounts mapping" page) for both the debit and credit roles.
+	 * Silently no-ops when:
+	 *   - bbAccounts is absent (`$this->bbaccounts_ledger === null`), or
+	 *   - either role is unmapped (config value 0).
+	 *
+	 * Subledger user_ids are passed per-leg by the caller. Pass 0 for a
+	 * leg whose account has no subledger (revenue / expense / lottery
+	 * pool / opening balances). For an intra-account transfer (e.g.
+	 * user A → user B on User Wallets) both legs hit the same role
+	 * with different subledger user_ids; the journal entry is then
+	 * atomic by construction, fixing the historic non-atomic
+	 * `add_points` + `substract_points` race in transfer/robbery code.
+	 *
+	 * @param string $debit_role            Role key (e.g. 'exp_posting'). Resolves via `ultimatepoints_acct_<role>` config.
+	 * @param string $credit_role           Role key for the credit side.
+	 * @param string|int|float $amount      Numeric amount; cast to string for bcmath precision.
+	 * @param string $description           Free-text human-readable description (≤255 chars).
+	 * @param int    $reference_id          Originating row id (post_id, lottery_id, …) so reports can drill back.
+	 * @param int    $debit_subledger_user  user_id for the debit leg if its account is customer-subledger; 0 otherwise.
+	 * @param int    $credit_subledger_user user_id for the credit leg if its account is customer-subledger; 0 otherwise.
+	 */
+	public function post_to_ledger(
+		string $debit_role,
+		string $credit_role,
+		$amount,
+		string $description,
+		int $reference_id = 0,
+		int $debit_subledger_user = 0,
+		int $credit_subledger_user = 0
+	): void
+	{
+		if ($this->bbaccounts_ledger === null)
+		{
+			return;
+		}
+
+		$debit_acct = (int) $this->config['ultimatepoints_acct_' . $debit_role];
+		$credit_acct = (int) $this->config['ultimatepoints_acct_' . $credit_role];
+
+		if ($debit_acct === 0 || $credit_acct === 0)
+		{
+			// Partial mapping or fully-unmapped role pair — skip the
+			// bbAccounts post. Legacy denormalised storage continues
+			// to work as before; the admin can complete the mapping
+			// later and history will simply be missing entries from
+			// before that point.
+			return;
+		}
+
+		$amount = (string) $amount;
+
+		try
+		{
+			$this->bbaccounts_ledger->create_entry(
+				time(),
+				$description,
+				[
+					[
+						'account_id'        => $debit_acct,
+						'debit'             => $amount,
+						'credit'            => '0',
+						'subledger_user_id' => $debit_subledger_user,
+					],
+					[
+						'account_id'        => $credit_acct,
+						'debit'             => '0',
+						'credit'            => $amount,
+						'subledger_user_id' => $credit_subledger_user,
+					],
+				],
+				'auto',
+				$reference_id,
+				'dmzx.ultimatepoints',
+				(int) $this->user->data['user_id']
+			);
+		}
+		catch (\Throwable $e)
+		{
+			// bbAccounts ledger refused the entry — log and continue.
+			// Phase B-2 is dual-write: the legacy `user_points` UPDATE
+			// has already happened (or is about to), so user-visible
+			// behaviour is unaffected. Failing here would only cause
+			// the surrounding feature (post submission, etc.) to break
+			// for an admin-side bookkeeping problem.
+			$this->log->add(
+				'critical',
+				(int) $this->user->data['user_id'],
+				$this->user->data['user_ip'],
+				'LOG_BBACCOUNTS_POST_FAILED',
+				false,
+				[$debit_role . '/' . $credit_role, $e->getMessage()]
+			);
+		}
+	}
+
+	/**
 	 * Add points to user
 	 */
 	function add_points($user_id, $amount)
