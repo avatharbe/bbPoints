@@ -112,6 +112,9 @@ services:
       - '%dmzx.ultimatepoints.table.points.lottery.history%'
       - '%dmzx.ultimatepoints.table.points.lottery.tickets%'
       - '%dmzx.ultimatepoints.table.points.values%'
+      # bbAccounts ledger (Phase B-1 wiring; consumed in B-2). Nullable —
+      # UltimatePoints loads and runs normally when bbAccounts is absent.
+      - '@?avathar.bbaccounts.service.ledger'
 
   dmzx.ultimatepoints.core.points.main:
     class: 'dmzx\ultimatepoints\core\points_main'

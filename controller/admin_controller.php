@@ -985,6 +985,120 @@ class admin_controller
 	}
 
 	/**
+	 * ACP "bbAccounts mapping" page (Phase B-1).
+	 *
+	 * Lets the admin map UltimatePoints' internal roles to existing
+	 * bbAccounts accounts. UltimatePoints does NOT create accounts —
+	 * the admin owns the chart of accounts in bbAccounts ACP. Each
+	 * mapping is stored in `phpbb_config` as ultimatepoints_acct_<role>
+	 * (= account_id). Roles unmapped (account_id = 0) silently skip
+	 * the bbAccounts journal-posting side at runtime (Phase B-2).
+	 *
+	 * Gracefully degrades when bbAccounts is absent: shows a notice
+	 * with the install link and disables the form.
+	 */
+	public function display_bbaccounts()
+	{
+		// 13 roles + their suggested type / subledger filter for the
+		// dropdown. Order matches contrib/specs/2026-05-10-bbaccounts-
+		// integration.md §3.1 and migrations/ultimatepoints_1_3_0.php.
+		$roles = [
+			'user_wallets'     => ['type' => 'liability', 'subledger' => 'customer'],
+			'bank_holdings'    => ['type' => 'liability', 'subledger' => 'customer'],
+			'lottery_pool'     => ['type' => 'liability', 'subledger' => ''],
+			'rev_post_costs'   => ['type' => 'revenue',   'subledger' => ''],
+			'rev_attach_costs' => ['type' => 'revenue',   'subledger' => ''],
+			'rev_penalty'      => ['type' => 'revenue',   'subledger' => ''],
+			'rev_bank_fees'    => ['type' => 'revenue',   'subledger' => ''],
+			'rev_admin_down'   => ['type' => 'revenue',   'subledger' => ''],
+			'exp_posting'      => ['type' => 'expense',   'subledger' => ''],
+			'exp_registration' => ['type' => 'expense',   'subledger' => ''],
+			'exp_random'       => ['type' => 'expense',   'subledger' => ''],
+			'exp_bank_int'     => ['type' => 'expense',   'subledger' => ''],
+			'exp_admin_award'  => ['type' => 'expense',   'subledger' => ''],
+		];
+
+		add_form_key('acp_points_bbaccounts');
+
+		// Resolve the bbAccounts ledger lazily — `@?` nullable DI is on
+		// functions_points; admin_controller fetches via the container so
+		// we can detect absence and render a friendly notice.
+		$ledger = null;
+		if ($this->phpbb_container->has('avathar.bbaccounts.service.ledger'))
+		{
+			$ledger = $this->phpbb_container->get('avathar.bbaccounts.service.ledger');
+		}
+
+		if ($ledger === null)
+		{
+			$this->template->assign_vars([
+				'BASE'                       => $this->u_action,
+				'S_BBACCOUNTS_AVAILABLE'     => false,
+				'BBACCOUNTS_INSTALL_URL'     => 'https://github.com/avatharbe/bbAccounts',
+			]);
+			return;
+		}
+
+		// POST: save mappings.
+		if ($this->request->is_set_post('submit'))
+		{
+			if (!check_form_key('acp_points_bbaccounts'))
+			{
+				trigger_error($this->user->lang['FORM_INVALID'] . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+
+			foreach (array_keys($roles) as $role)
+			{
+				$account_id = $this->request->variable('acct_' . $role, 0);
+				$this->config->set('ultimatepoints_acct_' . $role, (int) $account_id);
+			}
+
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_BBACCOUNTS_MAPPING_UPDATED');
+			trigger_error($this->user->lang['ACP_POINTS_BBACCOUNTS_SAVED'] . adm_back_link($this->u_action));
+		}
+
+		// GET: render the form. One dropdown per role, populated from
+		// the bbAccounts ledger filtered by the role's recommended type
+		// and subledger. Filter recommendations are advisory — admins
+		// can map any role to any account by editing the chart shape.
+		$mapped_count = 0;
+		foreach ($roles as $role => $filter)
+		{
+			$accounts = $ledger->list_accounts($filter['type'], $filter['subledger'] !== '' ? $filter['subledger'] : null);
+			$current = (int) $this->config['ultimatepoints_acct_' . $role];
+			if ($current > 0)
+			{
+				$mapped_count++;
+			}
+
+			$this->template->assign_block_vars('roles', [
+				'KEY'      => $role,
+				'LABEL'    => $this->user->lang['ACP_POINTS_BBACCOUNTS_ROLE_' . strtoupper($role)],
+				'CURRENT'  => $current,
+			]);
+
+			foreach ($accounts as $row)
+			{
+				$this->template->assign_block_vars('roles.options', [
+					'ACCOUNT_ID'   => (int) $row['account_id'],
+					'ACCOUNT_CODE' => $row['account_code'],
+					'ACCOUNT_NAME' => $row['account_name'],
+					'CURRENCY'     => $row['currency_code'],
+					'IS_ACTIVE'    => (int) $row['is_active'],
+					'SELECTED'     => ((int) $row['account_id'] === $current),
+				]);
+			}
+		}
+
+		$this->template->assign_vars([
+			'BASE'                   => $this->u_action,
+			'S_BBACCOUNTS_AVAILABLE' => true,
+			'MAPPED_COUNT'           => $mapped_count,
+			'TOTAL_ROLES'            => count($roles),
+		]);
+	}
+
+	/**
 	 * Set page url
 	 *
 	 * @param string $u_action Custom form action

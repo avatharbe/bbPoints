@@ -100,6 +100,18 @@ class functions_points
 	 * @param string $points_values_table
 	 *
 	 */
+	/**
+	 * @var \avathar\bbaccounts\service\ledger|null
+	 *
+	 * Wired via `@?avathar.bbaccounts.service.ledger` (nullable DI) so
+	 * the extension still loads when bbAccounts is absent. Phase B-1
+	 * stores the reference; Phase B-2 will start posting journal entries
+	 * through it for *mapped* roles. Until B-2 lands, this property is
+	 * carried but unused — calls to add_points/substract_points/etc.
+	 * remain unchanged.
+	 */
+	protected $bbaccounts_ledger;
+
 	public function __construct(
 		template $template,
 		user $user,
@@ -118,7 +130,8 @@ class functions_points
 		$points_config_table,
 		$points_lottery_history_table,
 		$points_lottery_tickets_table,
-		$points_values_table
+		$points_values_table,
+		?\avathar\bbaccounts\service\ledger $bbaccounts_ledger = null
 	)
 	{
 		$this->template = $template;
@@ -139,6 +152,7 @@ class functions_points
 		$this->points_lottery_history_table = $points_lottery_history_table;
 		$this->points_lottery_tickets_table = $points_lottery_tickets_table;
 		$this->points_values_table = $points_values_table;
+		$this->bbaccounts_ledger = $bbaccounts_ledger;
 	}
 
 	/**
