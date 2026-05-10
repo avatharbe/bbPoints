@@ -42,6 +42,11 @@ class acp_ultimatepoints_info
 					'auth' => 'ext_dmzx/ultimatepoints && acl_a_board',
 					'cat' => ['ACP_POINTS'],
 				],
+				'bbaccounts' => [
+					'title' => 'ACP_POINTS_BBACCOUNTS_TITLE',
+					'auth' => 'ext_dmzx/ultimatepoints && acl_a_board',
+					'cat' => ['ACP_POINTS'],
+				],
 			],
 		];
 	}
