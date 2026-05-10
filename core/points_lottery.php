@@ -95,7 +95,7 @@ class points_lottery
 		template $template,
 		user $user,
 		driver_interface $db,
-		request	$request,
+		request $request,
 		config $config,
 		helper $helper,
 		pagination $pagination,
