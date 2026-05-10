@@ -97,6 +97,30 @@
 
 			{% endif %}
 		</fieldset>
+
+		{% if S_BBACCOUNTS_CANONICAL_VISIBLE %}
+		{# Phase E — canonical mode toggle. Only after backfill. #}
+		<fieldset>
+			<legend><i class="icon fa-toggle-on fa-lg" aria-hidden="true"></i> {{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_LEGEND') }}</legend>
+			<p>{{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_EXPLAIN') }}</p>
+
+			<dl>
+				<dt>
+					<label for="canonical_mode">{{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_TOGGLE') }}{{ lang('COLON') }}</label><br/>
+					<span>{{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_TOGGLE_EXPLAIN') }}</span>
+				</dt>
+				<dd>
+					<label><input type="radio" class="radio" name="canonical_mode" value="0"{% if not S_BBACCOUNTS_CANONICAL %} checked="checked"{% endif %}/> {{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_OPTION_LEGACY') }}</label>
+					<label><input type="radio" class="radio" name="canonical_mode" value="1"{% if S_BBACCOUNTS_CANONICAL %} checked="checked"{% endif %}/> {{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_OPTION_LEDGER') }}</label>
+				</dd>
+			</dl>
+
+			<p class="quick">
+				<input class="button1" type="submit" id="submit_canonical" name="submit_canonical" value="{{ lang('SUBMIT') }}"/>
+				{{ S_FORM_TOKEN }}
+			</p>
+		</fieldset>
+		{% endif %}
 	</form>
 
 {% endif %}

@@ -277,4 +277,14 @@ $lang = array_merge($lang, [
 	'ACP_POINTS_BBACCOUNTS_BACKFILL_RUN'           => 'Run backfill now',
 	'ACP_POINTS_BBACCOUNTS_BACKFILL_NO_EQUITY'     => 'Pick an equity account before running the backfill.',
 	'ACP_POINTS_BBACCOUNTS_BACKFILL_SUCCESS'       => 'Backfill complete: %1$d users processed, wallet net %2$s, bank net %3$s, jackpot net %4$s.',
+
+	// bbAccounts integration — Phase E source-of-truth toggle (1.3.4+)
+	'ACP_POINTS_BBACCOUNTS_CANONICAL_LEGEND'         => 'bbAccounts as source of truth',
+	'ACP_POINTS_BBACCOUNTS_CANONICAL_EXPLAIN'        => 'When this is set to <em>bbAccounts ledger</em>, the bbAccounts journal becomes the authoritative store of point balances. Every mutation is a single ledger entry, and the legacy columns (<code>phpbb_users.user_points</code>, <code>phpbb_points_bank.holding</code>, <code>phpbb_points_values.lottery_jackpot</code>) are kept in sync as downstream caches — the legacy <code>add_points</code>/<code>substract_points</code>/<code>set_points</code>/<code>set_bank</code> functions become no-ops. Reversible — switch back to <em>legacy column</em> and the dual-write resumes (both stores are written to independently). Only switch to bbAccounts after you have mapped the roles, run the backfill, and confirmed that bbAccounts reports match expectations under the new reads.',
+	'ACP_POINTS_BBACCOUNTS_CANONICAL_TOGGLE'         => 'Source of truth',
+	'ACP_POINTS_BBACCOUNTS_CANONICAL_TOGGLE_EXPLAIN' => '<em>Legacy column</em>: dual-write — both <code>phpbb_users.user_points</code> and bbAccounts are written. <em>bbAccounts ledger</em>: single-write — only bbAccounts is written, the legacy column is mechanically refreshed from it.',
+	'ACP_POINTS_BBACCOUNTS_CANONICAL_OPTION_LEGACY'  => 'Legacy column',
+	'ACP_POINTS_BBACCOUNTS_CANONICAL_OPTION_LEDGER'  => 'bbAccounts ledger',
+	'ACP_POINTS_BBACCOUNTS_CANONICAL_ON_SAVED'       => 'Source of truth is now <strong>bbAccounts ledger</strong>. The legacy mutators no-op; cache columns are refreshed by the ledger writer.',
+	'ACP_POINTS_BBACCOUNTS_CANONICAL_OFF_SAVED'      => 'Source of truth is now <strong>legacy column</strong>. Dual-write resumes.',
 ]);

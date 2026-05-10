@@ -1163,6 +1163,32 @@ class admin_controller
 			}
 		}
 
+		// ---------------------------------------------------------------
+		// Phase E — canonical mode toggle. Only meaningful AFTER backfill;
+		// flipping it ON makes post_to_ledger the sole writer for both
+		// the journal AND the legacy cache columns. Reversible — toggle
+		// back OFF and the legacy add_points/substract_points dual-write
+		// resumes (Phase B-2 behaviour).
+		// ---------------------------------------------------------------
+		$canonical = (int) $this->config['ultimatepoints_bbaccounts_canonical'] === 1;
+
+		if ($this->request->is_set_post('submit_canonical') && $backfilled)
+		{
+			if (!check_form_key('acp_points_bbaccounts'))
+			{
+				trigger_error($this->user->lang['FORM_INVALID'] . adm_back_link($this->u_action), E_USER_WARNING);
+			}
+			$new_canonical = $this->request->variable('canonical_mode', 0) ? 1 : 0;
+			$this->config->set('ultimatepoints_bbaccounts_canonical', $new_canonical);
+			$this->log->add('admin', $this->user->data['user_id'], $this->user->data['user_ip'],
+				$new_canonical ? 'LOG_BBACCOUNTS_CANONICAL_ON' : 'LOG_BBACCOUNTS_CANONICAL_OFF'
+			);
+			trigger_error(
+				($new_canonical ? $this->user->lang['ACP_POINTS_BBACCOUNTS_CANONICAL_ON_SAVED'] : $this->user->lang['ACP_POINTS_BBACCOUNTS_CANONICAL_OFF_SAVED'])
+				. adm_back_link($this->u_action)
+			);
+		}
+
 		$this->template->assign_vars([
 			'BASE'                          => $this->u_action,
 			'S_BBACCOUNTS_AVAILABLE'        => true,
@@ -1173,6 +1199,8 @@ class admin_controller
 			'S_BBACCOUNTS_BACKFILL_BLOCKED' => !$backfilled && (!$wallet_role_mapped || empty($equity_options)),
 			'S_NEEDS_WALLET_MAPPING'        => !$wallet_role_mapped,
 			'S_NEEDS_EQUITY_ACCOUNT'        => $wallet_role_mapped && empty($equity_options),
+			'S_BBACCOUNTS_CANONICAL_VISIBLE' => $backfilled,
+			'S_BBACCOUNTS_CANONICAL'        => $canonical,
 		]);
 	}
 
