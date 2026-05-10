@@ -40,6 +40,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, [
 	'ACP_POINTS' => 'Ultimate Points',
 	'ACP_POINTS_BANK_TITLE' => 'Bank Settings',
+	'ACP_POINTS_BBACCOUNTS_TITLE' => 'bbAccounts Mapping',
 	'ACP_POINTS_FORUM_TITLE' => 'Forum Points Settings',
 	'ACP_POINTS_INDEX_TITLE' => 'Point Settings',
 	'ACP_POINTS_LOTTERY_TITLE' => 'Lottery Settings',

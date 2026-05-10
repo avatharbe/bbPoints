@@ -35,14 +35,14 @@ jobs:
 
     steps:
       - name: Checkout phpBB
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: phpbb/phpbb
           ref: ${{ env.PHPBB_BRANCH }}
           path: phpBB3
 
       - name: Checkout extension
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: phpBB3/phpBB/ext/${{ env.EXTNAME }}
 
@@ -73,7 +73,7 @@ jobs:
         # surface in EPV's transitive deps, append their PKSA ids here.
         run: |
           composer config --merge --json audit.ignore '["PKSA-rkkf-636k-qjb3","PKSA-wws7-mr54-jsny"]'
-          composer require phpbb/epv:dev-master --dev --no-interaction --ignore-platform-reqs -W
+          composer require phpbb/epv:dev-master --no-interaction --ignore-platform-reqs -W
         working-directory: ./phpBB3/phpBB
 
       - name: Run code sniffer
@@ -149,14 +149,14 @@ jobs:
 
     steps:
       - name: Checkout phpBB
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: phpbb/phpbb
           ref: ${{ env.PHPBB_BRANCH }}
           path: phpBB3
 
       - name: Checkout extension
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: phpBB3/phpBB/ext/${{ env.EXTNAME }}
 
@@ -225,7 +225,7 @@ jobs:
 
       - name: Send code coverage
         if: ${{ matrix.COVERAGE == 1 }}
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v4
         with:
           file: ./phpBB3/build/logs/clover.xml
   # END MySQL and MariaDB Job
@@ -274,14 +274,14 @@ jobs:
 
     steps:
       - name: Checkout phpBB
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: phpbb/phpbb
           ref: ${{ env.PHPBB_BRANCH }}
           path: phpBB3
 
       - name: Checkout extension
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: phpBB3/phpBB/ext/${{ env.EXTNAME }}
 
@@ -356,14 +356,14 @@ jobs:
 
     steps:
       - name: Checkout phpBB
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           repository: phpbb/phpbb
           ref: ${{ env.PHPBB_BRANCH }}
           path: phpBB3
 
       - name: Checkout extension
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: phpBB3/phpBB/ext/${{ env.EXTNAME }}
 

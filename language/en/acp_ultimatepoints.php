@@ -236,4 +236,32 @@ $lang = array_merge($lang, [
 	'UPLIST_ENABLE_EXPLAIN' => 'Allow users to use Ultimate Points List.',
 	'USER_POINTS' => 'User Points',
 	'USER_POINTS_EXPLAIN' => 'Amount of points the user owns.',
+
+	// bbAccounts integration (1.3.0+)
+	'ACP_POINTS_BBACCOUNTS_TITLE'                 => 'bbAccounts Mapping',
+	'ACP_POINTS_BBACCOUNTS_EXPLAIN'               => 'Map UltimatePoints’ internal roles to accounts you’ve created in the bbAccounts double-entry ledger. Once a role is mapped, every matching point movement is also posted as a journal entry, giving you full audit + reporting in bbAccounts. Roles you leave unmapped continue to use the legacy denormalised storage.',
+	'ACP_POINTS_BBACCOUNTS_NOT_INSTALLED'         => 'bbAccounts is not installed',
+	'ACP_POINTS_BBACCOUNTS_NOT_INSTALLED_EXPLAIN' => 'The bbAccounts extension is not present on this forum. Install and enable it (version 1.3.2-alpha or higher), create the chart of accounts you want to use in its ACP, then return here to map the UltimatePoints roles. UltimatePoints continues to function normally without bbAccounts — only the ledger integration is unavailable.',
+	'ACP_POINTS_BBACCOUNTS_STATUS'                => 'Mapping status',
+	'ACP_POINTS_BBACCOUNTS_MAPPED_OF'             => '%1$d of %2$d roles mapped',
+	'ACP_POINTS_BBACCOUNTS_MAPPING_LEGEND'        => 'Role → Account mapping',
+	'ACP_POINTS_BBACCOUNTS_UNMAPPED'              => '— (unmapped)',
+	'ACP_POINTS_BBACCOUNTS_INACTIVE'              => 'inactive',
+	'ACP_POINTS_BBACCOUNTS_SAVED'                 => 'bbAccounts mapping saved.',
+	'LOG_BBACCOUNTS_MAPPING_UPDATED'              => '<strong>UltimatePoints bbAccounts mapping updated</strong>',
+
+	// Role labels for the mapping page (one per ultimatepoints_acct_<role> config key).
+	'ACP_POINTS_BBACCOUNTS_ROLE_USER_WALLETS'     => 'User Wallets — per-user point balance',
+	'ACP_POINTS_BBACCOUNTS_ROLE_BANK_HOLDINGS'    => 'Bank Holdings — per-user savings (interest-bearing)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_LOTTERY_POOL'     => 'Lottery Pool — accumulating jackpot',
+	'ACP_POINTS_BBACCOUNTS_ROLE_REV_POST_COSTS'   => 'Pay-to-post charges (revenue)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_REV_ATTACH_COSTS' => 'Attachment download charges (revenue)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_REV_PENALTY'      => 'Warning / failed-robbery penalties (revenue)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_REV_BANK_FEES'    => 'Bank maintenance fees (revenue)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_REV_ADMIN_DOWN'   => 'Admin-set / admin-subtract write-down (revenue)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_EXP_POSTING'      => 'Posting / topic rewards (expense)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_EXP_REGISTRATION' => 'Registration bonus (expense)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_EXP_RANDOM'       => 'Random bonus on post (expense)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_EXP_BANK_INT'     => 'Bank interest paid out (expense)',
+	'ACP_POINTS_BBACCOUNTS_ROLE_EXP_ADMIN_AWARD'  => 'Admin-add award (expense)',
 ]);

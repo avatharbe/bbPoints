@@ -1,0 +1,56 @@
+{% INCLUDE 'overall_header.html' %}
+
+{% INCLUDECSS '@dmzx_ultimatepoints/css/acp_ultimatepoints.css' %}
+
+<a name="maincontent"></a>
+
+<h1><i class="icon fa-exchange fa-fw" aria-hidden="true"></i> {{ lang('ACP_POINTS') }} - {{ lang('ACP_POINTS_BBACCOUNTS_TITLE') }}</h1>
+<p>{{ lang('ACP_POINTS_BBACCOUNTS_EXPLAIN') }}</p>
+
+{% if not S_BBACCOUNTS_AVAILABLE %}
+
+	<div class="errorbox">
+		<h3>{{ lang('ACP_POINTS_BBACCOUNTS_NOT_INSTALLED') }}</h3>
+		<p>{{ lang('ACP_POINTS_BBACCOUNTS_NOT_INSTALLED_EXPLAIN') }}</p>
+		<p><a href="{{ BBACCOUNTS_INSTALL_URL }}" rel="external noopener noreferrer">{{ BBACCOUNTS_INSTALL_URL }}</a></p>
+	</div>
+
+{% else %}
+
+	<div class="successbox">
+		<p><strong>{{ lang('ACP_POINTS_BBACCOUNTS_STATUS') }}{{ lang('COLON') }}</strong>
+			{{ lang('ACP_POINTS_BBACCOUNTS_MAPPED_OF', MAPPED_COUNT, TOTAL_ROLES) }}</p>
+	</div>
+
+	<form id="acp_points_bbaccounts" method="post" action="{{ U_ACTION }}">
+		<fieldset>
+			<legend><i class="icon fa-cog fa-lg" aria-hidden="true"></i> {{ lang('ACP_POINTS_BBACCOUNTS_MAPPING_LEGEND') }}</legend>
+			{% for role in roles %}
+				<dl>
+					<dt>
+						<label for="acct_{{ role.KEY }}">{{ role.LABEL }}{{ lang('COLON') }}</label>
+					</dt>
+					<dd>
+						<select id="acct_{{ role.KEY }}" name="acct_{{ role.KEY }}">
+							<option value="0">{{ lang('ACP_POINTS_BBACCOUNTS_UNMAPPED') }}</option>
+							{% for opt in role.options %}
+								<option value="{{ opt.ACCOUNT_ID }}"{% if opt.SELECTED %} selected="selected"{% endif %}>
+									{{ opt.ACCOUNT_CODE }} — {{ opt.ACCOUNT_NAME }} ({{ opt.CURRENCY }}){% if not opt.IS_ACTIVE %} [{{ lang('ACP_POINTS_BBACCOUNTS_INACTIVE') }}]{% endif %}
+								</option>
+							{% endfor %}
+						</select>
+					</dd>
+				</dl>
+			{% endfor %}
+
+			<p class="quick">
+				<input class="button1" type="submit" id="submit" name="submit" value="{{ lang('SUBMIT') }}"/>
+				<input class="button2" type="reset" id="reset" name="reset" value="{{ lang('RESET') }}"/>
+				{{ S_FORM_TOKEN }}
+			</p>
+		</fieldset>
+	</form>
+
+{% endif %}
+
+{% INCLUDE 'overall_footer.html' %}

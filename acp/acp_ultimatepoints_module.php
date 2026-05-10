@@ -81,6 +81,15 @@ class acp_ultimatepoints_module
 				// Load the display forumpoints in the admin controller
 				$admin_controller->display_forumpoints();
 				break;
+
+			case 'bbaccounts':
+				// Load a template from adm/style for our ACP page
+				$this->tpl_name = 'acp_points_bbaccounts';
+				// Set the page title for our ACP page
+				$this->page_title = $user->lang['ACP_POINTS_BBACCOUNTS_TITLE'];
+				// Map UltimatePoints' internal roles to bbAccounts accounts
+				$admin_controller->display_bbaccounts();
+				break;
 		}
 	}
 }
