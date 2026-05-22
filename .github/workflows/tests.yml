@@ -72,7 +72,7 @@ jobs:
         # phpBB 3.3.x's pinned lockfile can't escape. If new advisories
         # surface in EPV's transitive deps, append their PKSA ids here.
         run: |
-          composer config --merge --json audit.ignore '["PKSA-rkkf-636k-qjb3","PKSA-wws7-mr54-jsny"]'
+          composer config --merge --json audit.ignore '["PKSA-rkkf-636k-qjb3","PKSA-wws7-mr54-jsny","PKSA-v5yj-8nmz-sk2q","PKSA-ft77-7h5f-p3r6","PKSA-b14r-zh1d-vdrc"]'
           composer require phpbb/epv:dev-master --no-interaction --ignore-platform-reqs -W
         working-directory: ./phpBB3/phpBB
 
