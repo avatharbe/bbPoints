@@ -5,7 +5,7 @@ Ultimate Points for phpBB 3.3
 
 A point-economy extension for phpBB. Users earn points for posting and registering, hold them in a wallet or interest-bearing bank, and spend them via lottery, robbery, peer-to-peer transfer, attachment downloads, or pay-to-post forums. 
 
-**Version:** 1.3.0 (10/05/2026)
+**Version:** 1.3.4 (23/05/2026)
 
 #### Requirements
 - phpBB 3.3.0 or higher (tested against 3.3.16)
@@ -29,11 +29,11 @@ A point-economy extension for phpBB. Users earn points for posting and registeri
 - **Bank** — interest rate, fee schedule, fee threshold
 - **Lottery** — ticket cost, jackpot rules, draw cadence
 - **Robbery** — success rate, max amount per attempt, penalty for failure
-- **bbAccounts mapping** *(new in 1.3.0)* — map UltimatePoints' internal roles (User Wallets, Bank Holdings, Lottery Pool, Posting Rewards, …) to admin-created accounts in the [bbAccounts](https://github.com/avatharbe/bbAccounts) double-entry ledger
+- **bbAccounts mapping** *(introduced 1.3.4)* — map UltimatePoints' internal roles (User Wallets, Bank Holdings, Lottery Pool, Posting Rewards, …) to admin-created accounts in the [bbAccounts](https://github.com/avatharbe/bbAccounts) double-entry ledger. Includes a one-shot backfill of existing balances and a "source of truth" toggle to switch the ledger from a mirror to the authoritative store.
 
 #### Extension integrations
 All integrations are optional soft dependencies — Ultimate Points works without any of them.
-- [bbAccounts](https://github.com/avatharbe/bbAccounts) (avathar/bbaccounts) — double-entry ledger storage. When installed and mapped via the new ACP page, every point movement is also posted as an immutable journal entry; admins get full audit + reporting via the bbAccounts trial balance and reports.
+- [bbAccounts](https://github.com/avatharbe/bbAccounts) (avathar/bbaccounts) — double-entry ledger storage. When installed and mapped via the ACP page, every point movement is posted as an immutable journal entry; admins get full audit + reporting via the bbAccounts trial balance and account/subledger ledgers. Operates in **dual-write** mode by default (legacy column stays authoritative, ledger mirrors it); flip the "source of truth" toggle to make the ledger authoritative and the legacy column a downstream cache.
 
 #### Languages
 English
