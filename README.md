@@ -14,7 +14,7 @@ A point-economy extension for phpBB. Users earn points for posting and registeri
 
 #### Lineage
 
-bbPoints v2.0 is the successor to `dmzx/ultimatepoints`. The v1.x line is preserved at the [`v1.3.4-final` tag](https://github.com/avatharbe/bbPoints/releases/tag/v1.3.4-final). v2.0 changes the PHP namespace, vendor directory, and service IDs to `avathar/bbpoints`, makes bbAccounts a required dependency, and removes the v1.3.x dual-write infrastructure — bbAccounts is the canonical store from day one. DB-stored identifiers (table names, config keys, ACL labels) are preserved verbatim. An existing v1.3.x install can upgrade in place by disabling v1.3.4, deleting the old `ext/dmzx/ultimatepoints/` directory, and installing v2.0 under the new vendor directory.
+bbPoints v2.0 is the successor to `dmzx/ultimatepoints`. The v1.x line is preserved at the [`v1.3.4-final` tag](https://github.com/avatharbe/bbPoints/releases/tag/v1.3.4-final). v2.0 changes the PHP namespace, vendor directory, and service IDs to `avathar/bbpoints`, makes bbAccounts a required dependency. DB-stored identifiers (table names, config keys, ACL labels) are preserved. An existing v1.3.x install can upgrade in place by disabling v1.3.4, deleting the old `ext/dmzx/ultimatepoints/` directory, and installing v2.0 under the new vendor directory.
 
 Originally by dmzx & posey. Fork maintained by Andy Vandenberghe (Sajaki). See `CHANGELOG.md` for the full v2.0 transition.
 
