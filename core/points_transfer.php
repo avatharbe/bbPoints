@@ -7,7 +7,7 @@
  *
  */
 
-namespace dmzx\ultimatepoints\core;
+namespace avathar\bbpoints\core;
 
 use parse_message;
 use phpbb\auth\auth;
@@ -147,20 +147,20 @@ class points_transfer
 		// Check, if transferring is allowed
 		if (!$points_config['transfer_enable'])
 		{
-			$message = $this->user->lang['TRANSFER_REASON_TRANSFER'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['TRANSFER_REASON_TRANSFER'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
 		// Check, if user is allowed to use the transfer module
 		if (!$this->auth->acl_get('u_use_transfer'))
 		{
-			$message = $this->user->lang['NOT_AUTHORISED'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['NOT_AUTHORISED'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
 		// Add part to bar
 		$this->template->assign_block_vars('navlinks', [
-			'U_VIEW_FORUM' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']),
+			'U_VIEW_FORUM' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']),
 			'FORUM_NAME' => sprintf($this->user->lang['TRANSFER_TITLE'], $this->config['points_name']),
 		]);
 
@@ -178,21 +178,21 @@ class points_transfer
 			// Check, if the sender has enough cash
 			if ($this->user->data['user_points'] < $am)
 			{
-				$message = sprintf($this->user->lang['TRANSFER_REASON_MINPOINTS'], $this->config['points_name']) . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = sprintf($this->user->lang['TRANSFER_REASON_MINPOINTS'], $this->config['points_name']) . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
 			// Check, if the amount is 0 or below
 			if ($am <= 0)
 			{
-				$message = sprintf($this->user->lang['TRANSFER_REASON_UNDERZERO'], $this->config['points_name']) . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = sprintf($this->user->lang['TRANSFER_REASON_UNDERZERO'], $this->config['points_name']) . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
 			// Check, if the user is trying to send to himself
 			if ($this->user->data['user_id'] == $checked_user['user_id'])
 			{
-				$message = sprintf($this->user->lang['TRANSFER_REASON_YOURSELF'], $this->config['points_name']) . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = sprintf($this->user->lang['TRANSFER_REASON_YOURSELF'], $this->config['points_name']) . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
@@ -234,7 +234,7 @@ class points_transfer
 			];
 
 			// Create the notification
-			$this->notification_manager->add_notifications('dmzx.ultimatepoints.notification.type.points', $data);
+			$this->notification_manager->add_notifications('avathar.bbpoints.notification.type.points', $data);
 
 			// Update mChat with good transfer
 			if ($this->phpbb_container->has('dmzx.mchat.settings') && $this->config['transfer_mchat_enable'])

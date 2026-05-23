@@ -1,6 +1,6 @@
 {% INCLUDE 'overall_header.html' %}
 
-{% INCLUDECSS '@dmzx_ultimatepoints/css/acp_ultimatepoints.css' %}
+{% INCLUDECSS '@avathar_bbpoints/css/acp_bbpoints.css' %}
 
 <a name="maincontent"></a>
 
@@ -49,78 +49,6 @@
 				{{ S_FORM_TOKEN }}
 			</p>
 		</fieldset>
-
-		{# Phase C — backfill from existing balances. One-shot, on demand. #}
-		<fieldset>
-			<legend><i class="icon fa-database fa-lg" aria-hidden="true"></i> {{ lang('ACP_POINTS_BBACCOUNTS_BACKFILL_LEGEND') }}</legend>
-			<p>{{ lang('ACP_POINTS_BBACCOUNTS_BACKFILL_EXPLAIN') }}</p>
-
-			{% if S_BBACCOUNTS_BACKFILL_DONE %}
-
-				<div class="successbox">
-					<p>{{ lang('ACP_POINTS_BBACCOUNTS_BACKFILL_DONE_NOTICE') }}</p>
-				</div>
-
-			{% elseif S_BBACCOUNTS_BACKFILL_BLOCKED %}
-
-				<div class="errorbox">
-					<h3>{{ lang('ACP_POINTS_BBACCOUNTS_BACKFILL_BLOCKED') }}</h3>
-					{% if S_NEEDS_WALLET_MAPPING %}
-						<p>{{ lang('ACP_POINTS_BBACCOUNTS_BACKFILL_NEEDS_WALLET') }}</p>
-					{% endif %}
-					{% if S_NEEDS_EQUITY_ACCOUNT %}
-						<p>{{ lang('ACP_POINTS_BBACCOUNTS_BACKFILL_NEEDS_EQUITY') }}</p>
-					{% endif %}
-				</div>
-
-			{% elseif S_BBACCOUNTS_BACKFILL_READY %}
-
-				<dl>
-					<dt>
-						<label for="equity_account_id">{{ lang('ACP_POINTS_BBACCOUNTS_BACKFILL_EQUITY_LABEL') }}{{ lang('COLON') }}</label><br/>
-						<span>{{ lang('ACP_POINTS_BBACCOUNTS_BACKFILL_EQUITY_EXPLAIN') }}</span>
-					</dt>
-					<dd>
-						<select id="equity_account_id" name="equity_account_id">
-							<option value="0">{{ lang('ACP_POINTS_BBACCOUNTS_UNMAPPED') }}</option>
-							{% for opt in equity_options %}
-								<option value="{{ opt.ACCOUNT_ID }}">{{ opt.ACCOUNT_CODE }} &mdash; {{ opt.ACCOUNT_NAME }} ({{ opt.CURRENCY }})</option>
-							{% endfor %}
-						</select>
-					</dd>
-				</dl>
-
-				<p class="quick">
-					<input class="button1" type="submit" id="submit_backfill" name="submit_backfill" value="{{ lang('ACP_POINTS_BBACCOUNTS_BACKFILL_RUN') }}"/>
-					{{ S_FORM_TOKEN }}
-				</p>
-
-			{% endif %}
-		</fieldset>
-
-		{% if S_BBACCOUNTS_CANONICAL_VISIBLE %}
-		{# Phase E — canonical mode toggle. Only after backfill. #}
-		<fieldset>
-			<legend><i class="icon fa-toggle-on fa-lg" aria-hidden="true"></i> {{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_LEGEND') }}</legend>
-			<p>{{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_EXPLAIN') }}</p>
-
-			<dl>
-				<dt>
-					<label for="canonical_mode">{{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_TOGGLE') }}{{ lang('COLON') }}</label><br/>
-					<span>{{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_TOGGLE_EXPLAIN') }}</span>
-				</dt>
-				<dd>
-					<label><input type="radio" class="radio" name="canonical_mode" value="0"{% if not S_BBACCOUNTS_CANONICAL %} checked="checked"{% endif %}/> {{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_OPTION_LEGACY') }}</label>
-					<label><input type="radio" class="radio" name="canonical_mode" value="1"{% if S_BBACCOUNTS_CANONICAL %} checked="checked"{% endif %}/> {{ lang('ACP_POINTS_BBACCOUNTS_CANONICAL_OPTION_LEDGER') }}</label>
-				</dd>
-			</dl>
-
-			<p class="quick">
-				<input class="button1" type="submit" id="submit_canonical" name="submit_canonical" value="{{ lang('SUBMIT') }}"/>
-				{{ S_FORM_TOKEN }}
-			</p>
-		</fieldset>
-		{% endif %}
 	</form>
 
 {% endif %}

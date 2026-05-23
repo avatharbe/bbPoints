@@ -7,7 +7,7 @@
  *
  */
 
-namespace dmzx\ultimatepoints\core;
+namespace avathar\bbpoints\core;
 
 use phpbb\auth\auth;
 use phpbb\cache\service;
@@ -133,7 +133,7 @@ class points_bank_edit
 
 		if (empty($u_id))
 		{
-			$message = $this->user->lang['EDIT_NO_ID_SPECIFIED'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank_edit']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['EDIT_NO_ID_SPECIFIED'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank_edit']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
@@ -195,7 +195,7 @@ class points_bank_edit
 
 				if (empty($u_id))
 				{
-					$message = $this->user->lang['EDIT_USER_NOT_EXIST'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank_edit']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+					$message = $this->user->lang['EDIT_USER_NOT_EXIST'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank_edit']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 					trigger_error($message);
 				}
 
@@ -217,7 +217,7 @@ class points_bank_edit
 					'L_USERNAME' => $this->user->lang['USERNAME'],
 					'L_SET_AMOUNT' => $this->user->lang['EDIT_SET_AMOUNT'],
 					'U_USER_LINK' => append_sid("{$this->root_path}memberlist.{$this->php_ext}", "mode=viewprofile&amp;u=" . $u_id),
-					'S_ACTION' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank_edit', 'adm_points' => '1']),
+					'S_ACTION' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank_edit', 'adm_points' => '1']),
 					'S_HIDDEN_FIELDS' => $hidden_fields,
 				]);
 			}

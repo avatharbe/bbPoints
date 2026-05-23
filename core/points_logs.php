@@ -7,7 +7,7 @@
  *
  */
 
-namespace dmzx\ultimatepoints\core;
+namespace avathar\bbpoints\core;
 
 use phpbb\auth\auth;
 use phpbb\config\config;
@@ -124,20 +124,27 @@ class points_logs
 		// Check, if logs are enabled
 		if (!$points_config['logs_enable'])
 		{
-			$message = $this->user->lang['LOGS_DISABLED'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['LOGS_DISABLED'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
 		// Check if user is allowed to use the logs
 		if (!$this->auth->acl_get('u_use_logs'))
 		{
-			$message = $this->user->lang['NOT_AUTHORISED'] . '<br /><br /><a href="' . append_sid("{$this->root_path}ultimatepoints") . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['NOT_AUTHORISED'] . '<br /><br /><a href="' . append_sid("{$this->root_path}bbpoints") . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
+		// v2.0: phpbb_points_log was dropped — the bbAccounts ledger holds
+		// the audit trail now. A bbAccounts-backed UCP logs view is planned
+		// but not yet implemented (tracked in https://github.com/avatharbe/bbPoints/issues/2).
+		// For now, surface a notice instead of running the legacy query.
+		$message = 'The point log page is being rebuilt against the bbAccounts ledger in a follow-up release. Your point balance is intact and full history is available in the bbAccounts journal.<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+		trigger_error($message);
+
 		// Add part to bar
 		$this->template->assign_block_vars('navlinks', [
-			'U_VIEW_FORUM' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs']),
+			'U_VIEW_FORUM' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs']),
 			'FORUM_NAME' => sprintf($this->user->lang['LOGS_TITLE'], $this->config['points_name']),
 		]);
 
@@ -275,22 +282,22 @@ class points_logs
 		$this->db->sql_freeresult($result);
 
 		//Start pagination
-		$this->pagination->generate_template_pagination($this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs', 'sk' => $sort_key, 'sd' => $sort_dir]), 'pagination', 'start', $max, $number, $start);
+		$this->pagination->generate_template_pagination($this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs', 'sk' => $sort_key, 'sd' => $sort_dir]), 'pagination', 'start', $max, $number, $start);
 
 		// Generate the page template
 		$this->template->assign_vars([
 			'PAGINATION' => $this->user->lang('POINTS_LOG_COUNT', $max),
 			'LOTTERY_NAME' => $points_values['lottery_name'],
 			'BANK_NAME' => $points_values['bank_name'],
-			'S_LOGS_ACTION' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs']),
+			'S_LOGS_ACTION' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs']),
 			'S_SELECT_SORT_DIR' => $s_sort_dir,
 			'S_SELECT_SORT_KEY' => $s_sort_key,
-			'U_TRANSFER_USER' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']),
-			'U_LOGS' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs']),
-			'U_LOTTERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']),
-			'U_BANK' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank']),
-			'U_ROBBERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery']),
-			'U_INFO' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'info']),
+			'U_TRANSFER_USER' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']),
+			'U_LOGS' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs']),
+			'U_LOTTERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']),
+			'U_BANK' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank']),
+			'U_ROBBERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery']),
+			'U_INFO' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'info']),
 			'U_USE_TRANSFER' => $this->auth->acl_get('u_use_transfer'),
 			'U_USE_LOGS' => $this->auth->acl_get('u_use_logs'),
 			'U_USE_LOTTERY' => $this->auth->acl_get('u_use_lottery'),

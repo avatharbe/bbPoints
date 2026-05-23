@@ -7,7 +7,7 @@
  *
  */
 
-namespace dmzx\ultimatepoints\notification;
+namespace avathar\bbpoints\notification;
 
 use phpbb\notification\type\base;
 use phpbb\controller\helper;
@@ -31,7 +31,7 @@ class points extends base
 
 	public function get_type()
 	{
-		return 'dmzx.ultimatepoints.notification.type.points';
+		return 'avathar.bbpoints.notification.type.points';
 	}
 
 	public static $notification_option = [
@@ -85,12 +85,12 @@ class points extends base
 
 	public function get_url()
 	{
-		return $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => $this->get_data('mode')]);
+		return $this->helper->route('avathar_bbpoints_controller', ['mode' => $this->get_data('mode')]);
 	}
 
 	public function get_email_template()
 	{
-		return '@dmzx_ultimatepoints/ultimatepoints';
+		return '@avathar_bbpoints/bbpoints';
 	}
 
 	public function get_email_template_variables()

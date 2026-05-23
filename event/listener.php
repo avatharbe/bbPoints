@@ -7,9 +7,9 @@
  *
  */
 
-namespace dmzx\ultimatepoints\event;
+namespace avathar\bbpoints\event;
 
-use dmzx\ultimatepoints\core\functions_points;
+use avathar\bbpoints\core\functions_points;
 use phpbb\auth\auth;
 use phpbb\cache\service;
 use phpbb\config\config;
@@ -187,7 +187,7 @@ class listener implements EventSubscriberInterface
 	{
 		$lang_set_ext = $event['lang_set_ext'];
 		$lang_set_ext[] = [
-			'ext_name' => 'dmzx/ultimatepoints',
+			'ext_name' => 'avathar/bbpoints',
 			'lang_set' => 'common',
 		];
 		$event['lang_set_ext'] = $lang_set_ext;
@@ -396,17 +396,17 @@ class listener implements EventSubscriberInterface
 			'USER_BANK_POINTS' => $this->functions_points->number_format_points($holding),
 			'L_USER_NO_BANK_ACC' => sprintf($this->user->lang['BANK_NO_ACCOUNT'], $points_values['bank_name']),
 			'L_MOD_USER_POINTS' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_points')) ? sprintf($this->user->lang['POINTS_MODIFY']) : '',
-			'U_POINTS_MODIFY' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_points')) ? $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'points_edit', 'user_id' => $user_id, 'adm_points' => '1']) : '',
+			'U_POINTS_MODIFY' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_points')) ? $this->helper->route('avathar_bbpoints_controller', ['mode' => 'points_edit', 'user_id' => $user_id, 'adm_points' => '1']) : '',
 			'L_MOD_USER_BANK' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_bank')) ? sprintf($this->user->lang['POINTS_MODIFY']) : '',
-			'U_BANK_MODIFY' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_points')) ? $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank_edit', 'user_id' => $user_id, 'adm_points' => '1']) : '',
+			'U_BANK_MODIFY' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_points')) ? $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank_edit', 'user_id' => $user_id, 'adm_points' => '1']) : '',
 			'L_DONATE' => ($this->auth->acl_get('u_use_points')) ? sprintf($this->user->lang['POINTS_DONATE']) : '',
-			'U_POINTS_DONATE' => ($this->auth->acl_get('u_use_points')) ? $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer', 'i' => $user_id, 'adm_points' => '1']) : '',
+			'U_POINTS_DONATE' => ($this->auth->acl_get('u_use_points')) ? $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer', 'i' => $user_id, 'adm_points' => '1']) : '',
 			'P_NAME' => $this->config['points_name'],
 			'USE_POINTS' => $this->config['points_enable'],
 			'USE_IMAGES_POINTS' => $points_config['images_memberlist_enable'],
 			'USE_BANK' => $points_config['bank_enable'],
 			'S_IS_OWN_PROF' => ($user_id == $this->user->data['user_id']) ? true : false,
-			'U_ROBBERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]),
+			'U_ROBBERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]),
 			'U_USE_ROBBERY' => $this->auth->acl_get('u_use_robbery') && $points_config['robbery_enable'],
 			'U_USE_TRANSFER' => $this->auth->acl_get('u_use_transfer') && $points_config['transfer_enable'],
 			'U_USE_POINTS' => $this->auth->acl_get('u_use_points'),
@@ -539,13 +539,13 @@ class listener implements EventSubscriberInterface
 			'BANK_GOLD' => $this->functions_points->number_format_points($row['bank_points']),
 			'BANK_ACCOUNT' => $row['bank_account'],
 			'L_MOD_USER_POINTS' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_points')) ? sprintf($this->user->lang['POINTS_MODIFY']) : '',
-			'U_POINTS_MODIFY' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_points')) ? $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'points_edit', 'user_id' => $poster_id, 'adm_points' => '1', 'post_id' => $row['post_id']]) : '',
+			'U_POINTS_MODIFY' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_points')) ? $this->helper->route('avathar_bbpoints_controller', ['mode' => 'points_edit', 'user_id' => $poster_id, 'adm_points' => '1', 'post_id' => $row['post_id']]) : '',
 			'L_BANK_USER_POINTS' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_bank')) ? sprintf($this->user->lang['POINTS_MODIFY']) : '',
-			'U_BANK_MODIFY' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_bank')) ? $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank_edit', 'user_id' => $poster_id, 'adm_points' => '1', 'post_id' => $row['post_id']]) : '',
+			'U_BANK_MODIFY' => ($this->auth->acl_get('a_') || $this->auth->acl_get('m_chg_bank')) ? $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank_edit', 'user_id' => $poster_id, 'adm_points' => '1', 'post_id' => $row['post_id']]) : '',
 			'L_DONATE' => ($this->auth->acl_get('u_use_points') && $points_config['transfer_enable']) ? sprintf($this->user->lang['POINTS_DONATE']) : '',
-			'U_POINTS_DONATE' => ($this->auth->acl_get('u_use_points')) ? $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer', 'i' => $poster_id, 'adm_points' => '1', 'post_id' => $row['post_id']]) : '',
+			'U_POINTS_DONATE' => ($this->auth->acl_get('u_use_points')) ? $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer', 'i' => $poster_id, 'adm_points' => '1', 'post_id' => $row['post_id']]) : '',
 			'S_IS_OWN_POST' => ($poster_id == $this->user->data['user_id']) ? true : false,
-			'U_ROBBERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $poster_id]),
+			'U_ROBBERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $poster_id]),
 			'U_USE_ROBBERY' => $this->auth->acl_get('u_use_robbery') && $points_config['robbery_enable'],
 			'U_USE_TRANSFER' => $this->auth->acl_get('u_use_transfer') && $points_config['transfer_enable'],
 			'L_ROBBERY' => $this->user->lang['ROBBERY_USER'],
@@ -561,8 +561,8 @@ class listener implements EventSubscriberInterface
 			$points_config = $this->cache->get('points_config');
 
 			$this->template->assign_vars([
-				'U_POINTS' => $this->helper->route('dmzx_ultimatepoints_controller'),
-				'U_POINTS_LIST' => $this->helper->route('dmzx_ultimatepoints_list_controller'),
+				'U_POINTS' => $this->helper->route('avathar_bbpoints_controller'),
+				'U_POINTS_LIST' => $this->helper->route('avathar_bbpoints_list_controller'),
 				'POINTS_LINK' => $this->config['points_name'],
 				// Phase D — bbAccounts wallet balance when the integration is fully wired; legacy column otherwise.
 				'USER_POINTS' => sprintf($this->functions_points->number_format_points($this->wallet_balance((int) $this->user->data['user_id'], $this->user->data['user_points']))),
@@ -585,16 +585,16 @@ class listener implements EventSubscriberInterface
 	// Lets show people where all users are.. addicted to the points, so probably in lottery
 	public function add_page_viewonline($event)
 	{
-		if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ultimatepoints') === 0)
+		if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/bbpoints') === 0)
 		{
 			$event['location'] = $this->user->lang('ACP_POINTS');
-			$event['location_url'] = $this->helper->route('dmzx_ultimatepoints_controller');
+			$event['location_url'] = $this->helper->route('avathar_bbpoints_controller');
 		}
 
-		if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/ultimatepointslist') === 0)
+		if (strrpos($event['row']['session_page'], 'app.' . $this->php_ext . '/bbpointslist') === 0)
 		{
 			$event['location'] = $this->user->lang('POINTS_LIST_TOTAL');
-			$event['location_url'] = $this->helper->route('dmzx_ultimatepoints_list_controller');
+			$event['location_url'] = $this->helper->route('avathar_bbpoints_list_controller');
 		}
 	}
 

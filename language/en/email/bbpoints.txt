@@ -1,4 +1,4 @@
-Subject: Ultimate Points - {{ SITENAME }}
+Subject: bbPoints - {{ SITENAME }}
 
 Hello {{ USERNAME }},
 
@@ -8,7 +8,7 @@ Hello {{ USERNAME }},
 
 ----------------------------
 
-If you no longer wish to receive the Ultimate Points email, click on the following link:
+If you no longer wish to receive the bbPoints email, click on the following link:
 {{ U_NOTIFICATION_SETTINGS }}
 
 {{ EMAIL_SIG }}

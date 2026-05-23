@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @package phpBB Extension - Ultimate Points
+ * @package phpBB Extension - bbPoints
  * @copyright (c) 2021 dmzx & posey - https://www.dmzx-web.net
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
@@ -39,9 +39,9 @@ if (empty($lang) || !is_array($lang))
 // Merge the following language entries into the lang array
 $lang = array_merge($lang, [
 	'ACP_POINTS_BANK_EXPLAIN' => 'Here you can alter the settings for the Bank module.',
-	'ACP_POINTS_DEACTIVATED' => 'Ultimate Points is currently disabled!',
+	'ACP_POINTS_DEACTIVATED' => 'bbPoints is currently disabled!',
 	'ACP_POINTS_FORUM_EXPLAIN' => 'Here you can set the default forum points for all forums at once. So ideal for your first settings.<br />Please keep in mind, that these settings are for <strong>ALL</strong> forums. So if you manually changed any of your forum points settings with individual values, you need to redone this after using this option!',
-	'ACP_POINTS_INDEX_EXPLAIN' => 'Here you can alter the General settings of Ultimate Points.',
+	'ACP_POINTS_INDEX_EXPLAIN' => 'Here you can alter the General settings of bbPoints.',
 	'ACP_POINTS_LOTTERY_EXPLAIN' => 'Here you can alter the settings of the Lottery module.',
 	'ACP_POINTS_ROBBERY_EXPLAIN' => 'Here you can alter the settings of the Robbery module.',
 	'ACP_POINTS_VALUES_HINT' => '<strong>Hint: </strong>Always enter values without the thousands separator<br />and decimals with a point, i.e. 1000.50',
@@ -93,7 +93,7 @@ $lang = array_merge($lang, [
 	'FORUM_COST_TOPIC_EXPLAIN' => 'Enter here, how much points a user has to pay to start a new topic in this forum.',
 	'FORUM_COST_POST' => 'Points to pay for new post',
 	'FORUM_COST_POST_EXPLAIN' => 'Enter here, how much points a user has to pay to make a new post in this forum.',
-	'FORUM_POINT_SETTINGS' => 'Ultimate Points Settings',
+	'FORUM_POINT_SETTINGS' => 'bbPoints Settings',
 	'FORUM_POINT_SETTINGS_EXPLAIN' => 'Here you can setup, how much points users will gain for placing new topics, new posts (replies) and editing their posts. These settings are on a per forum basis. This way you can make it very detailed, where users will get points and where not.',
 	'FORUM_POINT_SETTINGS_UPDATED' => 'Global forum points updated',
 	'FORUM_POINT_UPDATE' => 'Update global forum points',
@@ -139,11 +139,11 @@ $lang = array_merge($lang, [
 	'POINTS_BONUS_VALUE_EXPLAIN' => 'Give boundaries between which we will choose a random bonus amount.<br />If you want a fixed amount, set the minimum and the maximum the same.',
 	'POINTS_COMMENTS' => 'Allow Comments',
 	'POINTS_COMMENTS_EXPLAIN' => 'Allow users to leave comments with their points transfer/donation.',
-	'POINTS_CONFIG_SUCCESS' => 'The Ultimate Points settings have been updated successfully',
+	'POINTS_CONFIG_SUCCESS' => 'The bbPoints settings have been updated successfully',
 	'POINTS_DISABLEMSG' => 'Disabled message',
-	'POINTS_DISABLEMSG_EXPLAIN' => 'Message to display, when the Ultimate Points System is disabled.',
+	'POINTS_DISABLEMSG_EXPLAIN' => 'Message to display, when the bbPoints System is disabled.',
 	'POINTS_ENABLE' => 'Enable Points',
-	'POINTS_ENABLE_EXPLAIN' => 'Allow users to use Ultimate Points.',
+	'POINTS_ENABLE_EXPLAIN' => 'Allow users to use bbPoints.',
 	'POINTS_GROUP_TRANSFER' => 'Group Transfer',
 	'POINTS_GROUP_TRANSFER_ADD' => 'Add',
 	'POINTS_GROUP_TRANSFER_EXPLAIN' => 'Here you can add, subtract or set values for a certain group. You also may send a personal message to each member of the group. Handy, if you like to send i.e. Christmas Greetings with a small present (you can use smilies and bbCodes). If you don’ want to send a personal message with your transfer, just leave the fields subject and comment empty.',
@@ -232,23 +232,23 @@ $lang = array_merge($lang, [
 	'TRANSFER_MCHAT_ENABLE_EXPLAIN' => 'Post transfers from members.',
 	'TRANSFER_MCHAT_OPTIONS' => 'Transfer mChat Settings',
 
-	'UPLIST_ENABLE' => 'Enable Ultimate Points List',
-	'UPLIST_ENABLE_EXPLAIN' => 'Allow users to use Ultimate Points List.',
+	'UPLIST_ENABLE' => 'Enable bbPoints List',
+	'UPLIST_ENABLE_EXPLAIN' => 'Allow users to use bbPoints List.',
 	'USER_POINTS' => 'User Points',
 	'USER_POINTS_EXPLAIN' => 'Amount of points the user owns.',
 
 	// bbAccounts integration (1.3.0+)
 	'ACP_POINTS_BBACCOUNTS_TITLE'                 => 'bbAccounts Mapping',
-	'ACP_POINTS_BBACCOUNTS_EXPLAIN'               => 'Map UltimatePoints’ internal roles to accounts you’ve created in the bbAccounts double-entry ledger. Once a role is mapped, every matching point movement is also posted as a journal entry, giving you full audit + reporting in bbAccounts. Roles you leave unmapped continue to use the legacy denormalised storage.',
+	'ACP_POINTS_BBACCOUNTS_EXPLAIN'               => 'Map bbPoints’ internal roles to accounts you’ve created in the bbAccounts double-entry ledger. Once a role is mapped, every matching point movement is also posted as a journal entry, giving you full audit + reporting in bbAccounts. Roles you leave unmapped continue to use the legacy denormalised storage.',
 	'ACP_POINTS_BBACCOUNTS_NOT_INSTALLED'         => 'bbAccounts is not installed',
-	'ACP_POINTS_BBACCOUNTS_NOT_INSTALLED_EXPLAIN' => 'The bbAccounts extension is not present on this forum. Install and enable it (version 1.3.2-alpha or higher), create the chart of accounts you want to use in its ACP, then return here to map the UltimatePoints roles. UltimatePoints continues to function normally without bbAccounts — only the ledger integration is unavailable.',
+	'ACP_POINTS_BBACCOUNTS_NOT_INSTALLED_EXPLAIN' => 'The bbAccounts extension is not present on this forum. Install and enable it (version 1.3.2-alpha or higher), create the chart of accounts you want to use in its ACP, then return here to map the bbPoints roles. bbPoints continues to function normally without bbAccounts — only the ledger integration is unavailable.',
 	'ACP_POINTS_BBACCOUNTS_STATUS'                => 'Mapping status',
 	'ACP_POINTS_BBACCOUNTS_MAPPED_OF'             => '%1$d of %2$d roles mapped',
 	'ACP_POINTS_BBACCOUNTS_MAPPING_LEGEND'        => 'Role → Account mapping',
 	'ACP_POINTS_BBACCOUNTS_UNMAPPED'              => '— (unmapped)',
 	'ACP_POINTS_BBACCOUNTS_INACTIVE'              => 'inactive',
 	'ACP_POINTS_BBACCOUNTS_SAVED'                 => 'bbAccounts mapping saved.',
-	'LOG_BBACCOUNTS_MAPPING_UPDATED'              => '<strong>UltimatePoints bbAccounts mapping updated</strong>',
+	'LOG_BBACCOUNTS_MAPPING_UPDATED'              => '<strong>bbPoints bbAccounts mapping updated</strong>',
 
 	// Role labels for the mapping page (one per ultimatepoints_acct_<role> config key).
 	'ACP_POINTS_BBACCOUNTS_ROLE_USER_WALLETS'     => 'User Wallets — per-user point balance',
@@ -266,25 +266,6 @@ $lang = array_merge($lang, [
 	'ACP_POINTS_BBACCOUNTS_ROLE_EXP_ADMIN_AWARD'  => 'Admin-add award (expense)',
 
 	// bbAccounts integration — Phase C backfill (1.3.1+)
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_LEGEND'        => 'Backfill from existing balances',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_EXPLAIN'       => 'One-time, on-demand. Posts an opening journal entry to bbAccounts for every user whose current wallet (and bank, if mapped) balance differs from the bbAccounts subledger balance. The contra leg goes to an equity account you pick below. Run this once, after you have mapped the roles above and verified the chart of accounts in bbAccounts. The backfill button disappears once it has been run.',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_DONE_NOTICE'   => 'Opening balances have already been backfilled. From this point on, every UltimatePoints mutation on a mapped role posts a corresponding journal entry; bbAccounts subledger balances stay in sync via the dual-write shim.',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_BLOCKED'       => 'Backfill cannot run yet',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_NEEDS_WALLET'  => 'Map the <em>User Wallets</em> role above before running the backfill — that is the minimum required for an opening entry to be meaningful.',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_NEEDS_EQUITY'  => 'No active equity-type accounts found in bbAccounts. Create at least one equity account (e.g. <em>3010 Opening Balances</em> from the bbAccounts seed) in the bbAccounts ACP, then return here.',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_EQUITY_LABEL'  => 'Equity contra account',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_EQUITY_EXPLAIN'=> 'The equity-type account that the opening balances will be debited against. The default bbAccounts seed includes <em>3010 Opening Balances</em>, which is the conventional choice.',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_RUN'           => 'Run backfill now',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_NO_EQUITY'     => 'Pick an equity account before running the backfill.',
-	'ACP_POINTS_BBACCOUNTS_BACKFILL_SUCCESS'       => 'Backfill complete: %1$d users processed, wallet net %2$s, bank net %3$s, jackpot net %4$s.',
 
 	// bbAccounts integration — Phase E source-of-truth toggle (1.3.4+)
-	'ACP_POINTS_BBACCOUNTS_CANONICAL_LEGEND'         => 'bbAccounts as source of truth',
-	'ACP_POINTS_BBACCOUNTS_CANONICAL_EXPLAIN'        => 'When this is set to <em>bbAccounts ledger</em>, the bbAccounts journal becomes the authoritative store of point balances. Every mutation is a single ledger entry, and the legacy columns (<code>phpbb_users.user_points</code>, <code>phpbb_points_bank.holding</code>, <code>phpbb_points_values.lottery_jackpot</code>) are kept in sync as downstream caches — the legacy <code>add_points</code>/<code>substract_points</code>/<code>set_points</code>/<code>set_bank</code> functions become no-ops. Reversible — switch back to <em>legacy column</em> and the dual-write resumes (both stores are written to independently). Only switch to bbAccounts after you have mapped the roles, run the backfill, and confirmed that bbAccounts reports match expectations under the new reads.',
-	'ACP_POINTS_BBACCOUNTS_CANONICAL_TOGGLE'         => 'Source of truth',
-	'ACP_POINTS_BBACCOUNTS_CANONICAL_TOGGLE_EXPLAIN' => '<em>Legacy column</em>: dual-write — both <code>phpbb_users.user_points</code> and bbAccounts are written. <em>bbAccounts ledger</em>: single-write — only bbAccounts is written, the legacy column is mechanically refreshed from it.',
-	'ACP_POINTS_BBACCOUNTS_CANONICAL_OPTION_LEGACY'  => 'Legacy column',
-	'ACP_POINTS_BBACCOUNTS_CANONICAL_OPTION_LEDGER'  => 'bbAccounts ledger',
-	'ACP_POINTS_BBACCOUNTS_CANONICAL_ON_SAVED'       => 'Source of truth is now <strong>bbAccounts ledger</strong>. The legacy mutators no-op; cache columns are refreshed by the ledger writer.',
-	'ACP_POINTS_BBACCOUNTS_CANONICAL_OFF_SAVED'      => 'Source of truth is now <strong>legacy column</strong>. Dual-write resumes.',
 ]);

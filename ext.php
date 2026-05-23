@@ -1,20 +1,22 @@
 <?php
 /**
  *
- * @package phpBB Extension - Ultimate Points
+ * @package phpBB Extension - bbPoints (formerly Ultimate Points)
  * @copyright (c) 2016 dmzx & posey - https://www.dmzx-web.net
+ * @copyright (c) 2026 Andy Vandenberghe (Sajaki) - https://github.com/avatharbe
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
  */
 
-namespace dmzx\ultimatepoints;
+namespace avathar\bbpoints;
 
 use phpbb\extension\base;
 
 class ext extends base
 {
 	/**
-	 * Enable extension if phpBB version requirement is met
+	 * Enable extension only when phpBB version requirement is met
+	 * and bbAccounts is enabled (bbPoints v2.0 is bbAccounts-canonical).
 	 *
 	 * @return bool
 	 * @access public
@@ -22,11 +24,24 @@ class ext extends base
 	public function is_enableable()
 	{
 		$config = $this->container->get('config');
-		return version_compare($config['version'], '3.3.0', '>=');
+		if (version_compare($config['version'], '3.3.0', '<'))
+		{
+			return false;
+		}
+
+		$ext_manager = $this->container->get('ext.manager');
+		if (!$ext_manager->is_enabled('avathar/bbaccounts'))
+		{
+			$user = $this->container->get('user');
+			$user->add_lang_ext('avathar/bbpoints', 'common');
+			return [$user->lang('EXT_BBPOINTS_REQUIRES_BBACCOUNTS')];
+		}
+
+		return true;
 	}
 
 	protected static $notification_types = [
-		'dmzx.ultimatepoints.notification.type.points',
+		'avathar.bbpoints.notification.type.points',
 	];
 
 	/**

@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @package phpBB Extension - Ultimate Points
+ * @package phpBB Extension - bbPoints
  * @copyright (c) 2016 dmzx & posey - https://www.dmzx-web.net
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
@@ -84,6 +84,7 @@ $lang = array_merge($lang, [
 	'BANK_YOUR_ACCOUNT' => 'You can now deposit and withdraw to and from your account',
 
 	'EDIT_BANK_MODIFY' => 'Bank Administration',
+	'EXT_BBPOINTS_REQUIRES_BBACCOUNTS' => 'bbPoints requires the bbAccounts extension to be enabled. Please install and enable avathar/bbaccounts first.',
 	'EDIT_NO_ID_SPECIFIED' => 'You have not specified a username',
 	'EDIT_POINTS_ADMIN' => 'Points Admin',
 	'EDIT_POINTS_MODIFY' => '%s Administration',
@@ -207,10 +208,10 @@ $lang = array_merge($lang, [
 	'POINTS_BUPOINTS_TOTAL' => '%1$s Accounts: %2$s',
 	'POINTS_CASH_ON_HAND' => 'Cash on hand',
 	'POINTS_DESCRIPTION' => 'Description',
-	'POINTS_DISABLED' => 'Ultimate Points is currently disabled.',
+	'POINTS_DISABLED' => 'bbPoints is currently disabled.',
 	'POINTS_DONATE' => '[Donate]',
 	'POINTS_DOWNLOAD_COST' => 'Download Cost',
-	'POINTS_EXPLAIN' => 'Ultimate Points',
+	'POINTS_EXPLAIN' => 'bbPoints',
 	'POINTS_INFO' => 'Information',
 	'POINTS_INFO_DESCRIPTION' => 'Here you will find additional information for our %1$s policy.<br /><br />In addition to these values, you might receive additional %1$s in certain topics.<br /><br />Please be aware, that the forum owner has the ability to disable complete forums from getting %1$s!',
 	'POINTS_INSUFFICIENT_POST' => 'You do not have sufficient %2$s to make a post in this forum. The cost of making a post in this forum is <strong>%1$s %2$s</strong>.',
@@ -221,7 +222,7 @@ $lang = array_merge($lang, [
 		1 => '%d entry',
 		2 => '%d entries',
 	],
-	'POINTS_LIST_DISABLE' => 'Ultimate Points list disabled',
+	'POINTS_LIST_DISABLE' => 'bbPoints list disabled',
 	'POINTS_LIST_NO_USER' => 'No users with points',
 	'POINTS_LIST_USER' => '1 user',
 	'POINTS_LIST_USERS' => '%s users',
@@ -315,7 +316,7 @@ $lang = array_merge($lang, [
 	'UP_INSERT_FIRST_FILL' => 'The tables were filled successfully with some basic datas.',
 	'UP_REMOVE_CONFIG_ENTRIES' => 'The entries in the config table were removed successfully',
 	'UP_REMOVE_FORUM_ENTRIES' => 'The entries in the forums table were removed successfully',
-	'UP_ULTIMATE_POINTS_NAME' => 'Ultimate Points',
+	'UP_ULTIMATE_POINTS_NAME' => 'bbPoints',
 	'UP_ULTIMATE_POINTS_NAME_EXPLAIN' => 'With this extension you will give your users the possibility to collect and spend points. Click on the below actions to perform, what you like to do. Enabling <strong>Display Full Results</strong> is recommended.<br /><br />Have fun!',
 	'UP_UPDATE_SUCCESFUL' => 'The tables were updated successfully',
 

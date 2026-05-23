@@ -7,7 +7,7 @@
  *
  */
 
-namespace dmzx\ultimatepoints\core;
+namespace avathar\bbpoints\core;
 
 use phpbb\auth\auth;
 use phpbb\config\config;
@@ -93,7 +93,7 @@ class points_info
 
 		// Add part to bar
 		$this->template->assign_block_vars('navlinks', [
-			'U_VIEW_FORUM' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'info']),
+			'U_VIEW_FORUM' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'info']),
 			'FORUM_NAME' => sprintf($this->user->lang['POINTS_INFO'], $this->config['points_name']),
 		]);
 
@@ -158,12 +158,12 @@ class points_info
 			'INFO_FORUM_COST_TOPIC' => sprintf($this->user->lang['INFO_FORUM_COST_TOPIC'], $this->config['points_name']),
 			'INFO_FORUM_COST_POST' => sprintf($this->user->lang['INFO_FORUM_COST_POST'], $this->config['points_name']),
 
-			'U_TRANSFER_USER' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']),
-			'U_LOGS' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs']),
-			'U_LOTTERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']),
-			'U_BANK' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank']),
-			'U_ROBBERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery']),
-			'U_INFO' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'info']),
+			'U_TRANSFER_USER' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']),
+			'U_LOGS' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs']),
+			'U_LOTTERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']),
+			'U_BANK' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank']),
+			'U_ROBBERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery']),
+			'U_INFO' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'info']),
 			'U_USE_TRANSFER' => $this->auth->acl_get('u_use_transfer'),
 			'U_USE_LOGS' => $this->auth->acl_get('u_use_logs'),
 			'U_USE_LOTTERY' => $this->auth->acl_get('u_use_lottery'),

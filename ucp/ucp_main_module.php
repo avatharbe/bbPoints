@@ -7,9 +7,9 @@
  *
  */
 
-namespace dmzx\ultimatepoints\ucp;
+namespace avathar\bbpoints\ucp;
 
-class ucp_ultimatepoints_module
+class ucp_main_module
 {
 	public $u_action;
 
@@ -17,12 +17,12 @@ class ucp_ultimatepoints_module
 	{
 		global $phpbb_container, $config, $template;
 
-		$this->points_lottery_history_table = $phpbb_container->getParameter('dmzx.ultimatepoints.table.points.lottery.history');
-		$this->points_bank_table = $phpbb_container->getParameter('dmzx.ultimatepoints.table.points.bank');
-		$this->points_log_table = $phpbb_container->getParameter('dmzx.ultimatepoints.table.points.log');
-		$this->points_config_table = $phpbb_container->getParameter('dmzx.ultimatepoints.table.points.config');
-		$this->points_values_table = $phpbb_container->getParameter('dmzx.ultimatepoints.table.points.values');
-		$this->functions_points = $phpbb_container->get('dmzx.ultimatepoints.core.functions.points');
+		$this->points_lottery_history_table = $phpbb_container->getParameter('avathar.bbpoints.table.points.lottery.history');
+		$this->points_bank_table = $phpbb_container->getParameter('avathar.bbpoints.table.points.bank');
+		$this->points_log_table = $phpbb_container->getParameter('avathar.bbpoints.table.points.log');
+		$this->points_config_table = $phpbb_container->getParameter('avathar.bbpoints.table.points.config');
+		$this->points_values_table = $phpbb_container->getParameter('avathar.bbpoints.table.points.values');
+		$this->functions_points = $phpbb_container->get('avathar.bbpoints.core.functions.points');
 
 		$points_config = $this->config_info();
 

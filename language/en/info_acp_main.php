@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @package phpBB Extension - Ultimate Points
+ * @package phpBB Extension - bbPoints
  * @copyright (c) 2016 dmzx & posey - https://www.dmzx-web.net
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
@@ -38,14 +38,14 @@ if (empty($lang) || !is_array($lang))
 
 // Merge the following language entries into the lang array
 $lang = array_merge($lang, [
-	'ACP_POINTS' => 'Ultimate Points',
+	'ACP_POINTS' => 'bbPoints',
 	'ACP_POINTS_BANK_TITLE' => 'Bank Settings',
 	'ACP_POINTS_BBACCOUNTS_TITLE' => 'bbAccounts Mapping',
 	'ACP_POINTS_FORUM_TITLE' => 'Forum Points Settings',
 	'ACP_POINTS_INDEX_TITLE' => 'Point Settings',
 	'ACP_POINTS_LOTTERY_TITLE' => 'Lottery Settings',
 	'ACP_POINTS_ROBBERY_TITLE' => 'Robbery Settings',
-	'ACP_USER_POINTS_TITLE' => 'Ultimate Points Settings',
+	'ACP_USER_POINTS_TITLE' => 'bbPoints Settings',
 	// Log actions
 	'LOG_GROUP_TRANSFER_ADD' => 'Transferred Points to a group',
 	'LOG_GROUP_TRANSFER_SET' => 'Set Points to a new value for a group',
@@ -64,7 +64,6 @@ $lang = array_merge($lang, [
 	'LOG_RESYNC_POINTSCOUNTS' => '<strong>All users points were reset successfully</strong>',
 	'LOG_RESYNC_POINTSLOGSCOUNTS' => '<strong>All user logs were reset successfully</strong>',
 	'LOG_BBACCOUNTS_POST_FAILED' => '<strong>bbAccounts journal entry rejected</strong><br />» role pair: %1$s — %2$s',
-	'LOG_BBACCOUNTS_BACKFILL_DONE' => '<strong>bbAccounts opening-balance backfill ran</strong><br />» %1$d users processed, wallet net %2$s, bank net %3$s, jackpot net %4$s',
-	'LOG_BBACCOUNTS_CANONICAL_ON'  => '<strong>Source of truth set to bbAccounts ledger</strong> (single-write — legacy mutators no-op, cache refreshed from the ledger)',
-	'LOG_BBACCOUNTS_CANONICAL_OFF' => '<strong>Source of truth set to legacy column</strong> (dual-write resumes)',
+	'LOG_BBPOINTS_ROLE_UNMAPPED' => '<strong>bbPoints role unmapped — point movement skipped</strong><br />» role pair: %1$s. Complete the mapping in ACP → bbPoints → bbAccounts Mapping.',
+	'LOG_BBPOINTS_RESYNC_CACHES' => '<strong>Resynced cached point balances from bbAccounts ledger</strong><br />» %1$d rows refreshed',
 ]);

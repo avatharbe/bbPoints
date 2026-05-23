@@ -7,7 +7,7 @@
  *
  */
 
-namespace dmzx\ultimatepoints\core;
+namespace avathar\bbpoints\core;
 
 use phpbb\auth\auth;
 use phpbb\config\config;
@@ -135,20 +135,20 @@ class points_robbery_user
 		// Check, if user is allowed to use the robbery
 		if (!$this->auth->acl_get('u_use_robbery'))
 		{
-			$message = $this->user->lang['NOT_AUTHORISED'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['NOT_AUTHORISED'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
 		// Check, if robbery is enabled
 		if (!$points_config['robbery_enable'])
 		{
-			$message = $this->user->lang['ROBBERY_DISABLED'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['ROBBERY_DISABLED'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
 		// Add part to bar
 		$this->template->assign_block_vars('navlinks', [
-			'U_VIEW_FORUM' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user']),
+			'U_VIEW_FORUM' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user']),
 			'FORUM_NAME' => sprintf($this->user->lang['POINTS_ROBBERY'], $this->config['points_name']),
 		]);
 
@@ -185,21 +185,21 @@ class points_robbery_user
 
 			if ($attacked_amount <= 0)
 			{
-				$message = $this->user->lang['ROBBERY_TOO_SMALL_AMOUNT'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = $this->user->lang['ROBBERY_TOO_SMALL_AMOUNT'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
 			// Check, if user tries to rob himself
 			if ($this->user->data['user_id'] == (int) $u_id)
 			{
-				$message = $this->user->lang['ROBBERY_SELF'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = $this->user->lang['ROBBERY_SELF'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
 			// Check, if user tries to rob a guest?
 			if ($u_id == null)
 			{
-				$message = $this->user->lang['ROBBERY_GUEST'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = $this->user->lang['ROBBERY_GUEST'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
@@ -208,7 +208,7 @@ class points_robbery_user
 			{
 				if ($this->user->data['user_points'] < ($attacked_amount / 100 * $points_values['robbery_loose']))
 				{
-					$message = $this->user->lang['ROBBERY_TO_MUCH'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+					$message = $this->user->lang['ROBBERY_TO_MUCH'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 					trigger_error($message);
 				}
 			}
@@ -216,7 +216,7 @@ class points_robbery_user
 			// If no matching user id is found
 			if (!$user_id)
 			{
-				$message = $this->user->lang['POINTS_NO_USER'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = $this->user->lang['POINTS_NO_USER'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
@@ -235,7 +235,7 @@ class points_robbery_user
 
 			if ($attacked_amount > $pointsa)
 			{
-				$message = $this->user->lang['ROBBERY_TO_MUCH_FROM_USER'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = $this->user->lang['ROBBERY_TO_MUCH_FROM_USER'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
@@ -244,7 +244,7 @@ class points_robbery_user
 			{
 				if ($attacked_amount > ($pointsa / 100 * $points_values['robbery_max_rob']))
 				{
-					$message = sprintf($this->user->lang['ROBBERY_MAX_ROB'], $points_values['robbery_max_rob']) . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+					$message = sprintf($this->user->lang['ROBBERY_MAX_ROB'], $points_values['robbery_max_rob']) . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 					trigger_error($message);
 				}
 			}
@@ -298,10 +298,10 @@ class points_robbery_user
 					}
 
 					// Create the notification
-					$this->notification_manager->add_notifications('dmzx.ultimatepoints.notification.type.points', $data);
+					$this->notification_manager->add_notifications('avathar.bbpoints.notification.type.points', $data);
 				}
 
-				$message = $this->user->lang['ROBBERY_SUCCESFUL'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = $this->user->lang['ROBBERY_SUCCESFUL'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			} // If robbery failed and notify user
 			else
@@ -337,10 +337,10 @@ class points_robbery_user
 						}
 
 						// Create the notification
-						$this->notification_manager->add_notifications('dmzx.ultimatepoints.notification.type.points', $data);
+						$this->notification_manager->add_notifications('avathar.bbpoints.notification.type.points', $data);
 					}
 
-					$message = $this->user->lang['ROBBERY_BAD'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+					$message = $this->user->lang['ROBBERY_BAD'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery_user', 'user_id' => $user_id]) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 					trigger_error($message);
 				}
 			}
@@ -369,7 +369,7 @@ class points_robbery_user
 		// Check, if user tries to rob a guest or a unkown user_id?
 		if ($u_id == null || isset($opponent['user_id']) == null)
 		{
-			$message = $this->user->lang['ROBBERY_GUEST'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['ROBBERY_GUEST'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 		$username_full = get_username_string('full', $opponent['user_id'], $opponent['username'], $opponent['user_colour']);

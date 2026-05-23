@@ -1,33 +1,36 @@
 {
-	"name": "dmzx/ultimatepoints",
+	"name": "avathar/bbpoints",
 	"type": "phpbb-extension",
-	"description": "The Ultimate Points is an addition to your phpBB3 forum, where people can gain points and also are able to spend points, of course.",
-	"homepage": "https://www.dmzx-web.net",
-	"version": "1.3.4",
+	"description": "phpBB extension: per-user point economy with bbAccounts ledger as the canonical store. Posting rewards, bank, lottery, robbery, transfers. Successor to dmzx/ultimatepoints (v1.x).",
+	"homepage": "https://github.com/avatharbe/bbPoints",
+	"version": "2.0.0",
 	"time": "2026-05-23",
 	"keywords": [
 		"phpbb",
 		"extension",
-		"ultimatepoints"
+		"bbpoints",
+		"bbaccounts",
+		"points",
+		"economy"
 	],
 	"license": "GPL-2.0-only",
 	"authors": [
 		{
-			"name": "Sajaki",
-			"homepage": "http://avathar.be/forum/",
-			"role": "Developer"
+			"name": "Andy Vandenberghe (Sajaki)",
+			"homepage": "https://github.com/avatharbe",
+			"role": "Maintainer (v2.0+)"
 		},
 		{
 			"name": "dmzx",
 			"homepage": "https://www.dmzx-web.net",
 			"email": "info@dmzx-web.net",
-			"role": "Extension Developer"
+			"role": "Original author"
 		},
 		{
 			"name": "posey",
 			"homepage": "https://www.dmzx-web.net",
 			"email": "admin@godfathertalks.com",
-			"role": "Extension Developer"
+			"role": "Original author"
 		},
 		{
 			"name": "Felix Mueller (femu)",
@@ -44,24 +47,24 @@
 			"homepage": "http://vfalcone.ru/forum/",
 			"role": "3.0 Modification Developer"
 		}
-		
 	],
 	"require": {
-		"php": ">=7.1.3",
-		"composer/installers": "~1.0"
+		"php": ">=7.4",
+		"composer/installers": "~1.0",
+		"avathar/bbaccounts": "^1.0.0-alpha"
 	},
 	"require-dev": {
 		"phpbb/epv": "dev-master"
 	},
 	"extra": {
-		"display-name": "Ultimate Points Extension",
+		"display-name": "bbPoints",
 		"soft-require": {
 			"phpbb/phpbb": ">=3.3.0,<4.0.0@dev"
 		},
 		"version-check": {
 			"host": "www.avathar.be",
 			"directory": "/versioncheck",
-			"filename": "ultimatepoints.json",
+			"filename": "bbpoints.json",
 			"ssl": true
 		}
 	}

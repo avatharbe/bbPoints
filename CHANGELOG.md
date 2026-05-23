@@ -1,4 +1,46 @@
-# Ultimate Points Extension Changelog
+# bbPoints (formerly Ultimate Points Extension) Changelog
+
+## 2.0.0 (23/05/2026) — Rename + bbAccounts canonical
+
+Breaking-version: rename and architectural simplification. See [tracking issue #2](https://github.com/avatharbe/bbPoints/issues/2) and `contrib/specs/2026-05-23-rename-to-avathar-bbpoints-design.md`.
+
+### Renamed
+- Composer name: `dmzx/ultimatepoints` → `avathar/bbpoints`
+- PHP namespace: `dmzx\ultimatepoints` → `avathar\bbpoints`
+- Vendor directory: `ext/dmzx/ultimatepoints/` → `ext/avathar/bbpoints/`
+- Service IDs: `dmzx.ultimatepoints.*` → `avathar.bbpoints.*`
+- Container parameter prefix: `dmzx.ultimatepoints.table.*` → `avathar.bbpoints.table.*`
+- ACP / UCP module file basenames: `acp/acp_ultimatepoints_*` → `acp/acp_main_*`; `ucp/ucp_ultimatepoints_*` → `ucp/ucp_main_*`
+- Language files: `acp_ultimatepoints.php` → `acp_bbpoints.php`, `permissions_ultimatepoints.php` → `permissions_bbpoints.php`, `info_acp_ultimatepoints.php` → `info_acp_main.php`, `info_ucp_ultimatepoints.php` → `info_ucp_main.php`
+- Route names: `dmzx_ultimatepoints_*` → `avathar_bbpoints_*`
+- URL paths: `/ultimatepoints` → `/bbpoints`, `/ultimatepointslist` → `/bbpointslist`
+- CSS file: `acp_ultimatepoints.css` → `acp_bbpoints.css`
+- Notification template prefix: `@dmzx_ultimatepoints/` → `@avathar_bbpoints/`
+
+### Removed
+- The v1.3.x dual-write infrastructure (mutation funnel branching, `ultimatepoints_bbaccounts_canonical` toggle, opening-balance backfill action).
+- The `phpbb_points_log` audit table. Transfer / robbery / event history now lives in bbAccounts journal entries.
+- Config keys `ultimatepoints_bbaccounts_backfilled` and `ultimatepoints_bbaccounts_canonical`.
+- The ACP backfill button and source-of-truth toggle (UI removed from the bbAccounts Mapping screen).
+- The 16-file v1.x migration chain (`ultimatepoints_install.php` + 1.1.x–1.3.x), squashed into a single `bbpoints_install.php`. Old migrations preserved under `contrib/archive/migrations/`.
+
+### Added
+- bbAccounts (`avathar/bbaccounts`) is now a **required** dependency. The extension will not enable when bbAccounts is absent or disabled — the `ext.php` enable gate surfaces a clear message.
+- ACP diagnostic action: **Resync caches from ledger** — recomputes `phpbb_users.user_points` and `phpbb_points_bank.holding` from the bbAccounts ledger for a single user or all users.
+- Single squashed install migration `bbpoints_install.php` covering the entire v2.0 schema in one shot.
+
+### Preserved (DB-level)
+- All DB-stored config keys (`points_*`, `bank_*`, `lottery_*`, `robbery_*`, `transfer_*`, `ultimatepoints_acct_*`, etc.) — same names, same semantics.
+- All ACL labels (`u_use_points`, `f_pay_*`, `m_chg_*`, `a_points`).
+- All surviving tables (`phpbb_points_bank`, `phpbb_points_config`, `phpbb_points_lottery_history`, `phpbb_points_lottery_tickets`, `phpbb_points_values`).
+- The `phpbb_users.user_points` column.
+- The 13 bbAccounts role names (`user_wallets`, `bank_holdings`, `lottery_pool`, `exp_*`, `rev_*`).
+- Language constant names (template references unchanged).
+
+### Upgrade path
+Disable the v1.3.x extension in the ACP (preserves DB rows), delete `ext/dmzx/ultimatepoints/`, install v2.0 at `ext/avathar/bbpoints/`, enable. The install migration is idempotent — it detects surviving DB state and skips re-seeding. The new "Resync caches from ledger" action rebuilds the cache columns from the historical bbAccounts journal entries that were posted during the v1.3.x dual-write phase.
+
+---
 
 ## Changes in 1.3.4 (Phase E — drop dual-write, gated cutover)
 - New ACP toggle on the bbAccounts mapping page: **Source of truth = Legacy column / bbAccounts ledger** (visible only after Phase C backfill is complete). When set to bbAccounts ledger, `post_to_ledger` is the sole writer — it posts the journal entry AND directly maintains `phpbb_users.user_points`, `phpbb_points_bank.holding`, and `phpbb_points_values.lottery_jackpot` as downstream caches. The legacy `add_points`, `substract_points`, `set_points`, `set_bank` mutators and the bulk `UPDATE`s inside `run_bank()` early-return so the cache isn't double-updated. Backed by a new `ultimatepoints_bbaccounts_canonical` config flag (default 0).

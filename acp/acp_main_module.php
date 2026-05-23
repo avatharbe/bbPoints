@@ -7,9 +7,9 @@
  *
  */
 
-namespace dmzx\ultimatepoints\acp;
+namespace avathar\bbpoints\acp;
 
-class acp_ultimatepoints_module
+class acp_main_module
 {
 	public $u_action;
 
@@ -18,10 +18,10 @@ class acp_ultimatepoints_module
 		global $phpbb_container, $user;
 
 		// Get an instance of the admin controller
-		$admin_controller = $phpbb_container->get('dmzx.ultimatepoints.admin.controller');
+		$admin_controller = $phpbb_container->get('avathar.bbpoints.admin.controller');
 
 		// Add the ACP lang file
-		$user->add_lang_ext('dmzx/ultimatepoints', 'acp_ultimatepoints');
+		$user->add_lang_ext('avathar/bbpoints', 'acp_bbpoints');
 
 		// Make the $u_action url available in the admin controller
 		$admin_controller->set_page_url($this->u_action);

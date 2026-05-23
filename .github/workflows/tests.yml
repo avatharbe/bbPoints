@@ -1,7 +1,7 @@
 name: Tests
 
 env:
-  EXTNAME: dmzx/ultimatepoints # Must match composer.json `name` and the PHP namespace path; Linux CI is case-sensitive.
+  EXTNAME: avathar/bbpoints # Must match composer.json `name` and the PHP namespace path; Linux CI is case-sensitive.
   SNIFF: 1            # Run code sniffer on your code? 1 or 0
   IMAGE_ICC: 1        # Run icc profile sniffer on your images? 1 or 0
   EPV: 1              # Run EPV (Extension Pre Validator) on your code? 1 or 0

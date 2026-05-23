@@ -1,7 +1,7 @@
 <?php
 /**
  *
- * @package phpBB Extension - Ultimate Points
+ * @package phpBB Extension - bbPoints
  * @copyright (c) 2016 dmzx & posey - https://www.dmzx-web.net
  * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
  *
@@ -33,6 +33,17 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 
 $lang = array_merge($lang, [
-	'UCP_ULTIMATEPOINTS_TITLE' => 'Ultimate Points',
-	'UCP_ULTIMATEPOINTS_EXPLAIN' => 'Your statistics'
+	'ACL_CAT_POINTS' => 'bbPoints',
+	'ACL_U_USE_POINTS' => 'Can use bbPoints',
+	'ACL_U_USE_ROBBERY' => 'Can use Robbery Module',
+	'ACL_U_USE_BANK' => 'Can use Bank Module',
+	'ACL_U_USE_LOGS' => 'Can use Log Module',
+	'ACL_U_USE_LOTTERY' => 'Can use Lottery Module',
+	'ACL_U_USE_TRANSFER' => 'Can use Transfer Module',
+	'ACL_F_PAY_ATTACHMENT' => 'Has to pay for downloading attachments',
+	'ACL_F_PAY_TOPIC' => 'Has to pay for making a new topic',
+	'ACL_F_PAY_POST' => 'Has to pay for making a new post',
+	'ACL_M_CHG_POINTS' => 'Can change users points',
+	'ACL_M_CHG_BANK' => 'Can change users Bank points',
+	'ACL_A_POINTS' => 'Can administrate bbPoints',
 ]);

@@ -7,34 +7,34 @@
  *
  */
 
-namespace dmzx\ultimatepoints\ucp;
+namespace avathar\bbpoints\ucp;
 
-class ucp_ultimatepoints_info
+class ucp_main_info
 {
 	function module()
 	{
 		return [
-			'filename' => '\dmzx\ultimatepoints\ucp\ucp_ultimatepoints_module',
+			'filename' => '\avathar\bbpoints\ucp\ucp_main_module',
 			'title' => 'UCP_ULTIMATEPOINTS_TITLE',
 			'modes' => [
 				'lottery' => [
 					'title' => 'LOTTERY_TITLE_MAIN',
-					'auth' => 'ext_dmzx/ultimatepoints',
+					'auth' => 'ext_avathar/bbpoints',
 					'cat' => ['UCP_MAIN'],
 				],
 				'bank' => [
 					'title' => 'BANK_TITLE_MAIN',
-					'auth' => 'ext_dmzx/ultimatepoints',
+					'auth' => 'ext_avathar/bbpoints',
 					'cat' => ['UCP_MAIN'],
 				],
 				'robbery' => [
 					'title' => 'POINTS_ROBBERY',
-					'auth' => 'ext_dmzx/ultimatepoints',
+					'auth' => 'ext_avathar/bbpoints',
 					'cat' => ['UCP_MAIN'],
 				],
 				'transfer' => [
 					'title' => 'POINTS_TRANSFER_RECIEVED',
-					'auth' => 'ext_dmzx/ultimatepoints',
+					'auth' => 'ext_avathar/bbpoints',
 					'cat' => ['UCP_MAIN'],
 				],
 			],

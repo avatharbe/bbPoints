@@ -1,6 +1,6 @@
-dmzx_ultimatepoints_controller:
-  path: /ultimatepoints
-  defaults: { _controller: 'dmzx.ultimatepoints.controller:handle_ultimatepoints' }
-dmzx_ultimatepoints_list_controller:
-  path: /ultimatepointslist
-  defaults: { _controller: 'dmzx.ultimatepoints.list.controller:handle_ultimatepoints_list' }
+avathar_bbpoints_controller:
+  path: /bbpoints
+  defaults: { _controller: 'avathar.bbpoints.controller:handle_ultimatepoints' }
+avathar_bbpoints_list_controller:
+  path: /bbpointslist
+  defaults: { _controller: 'avathar.bbpoints.list.controller:handle_ultimatepoints_list' }

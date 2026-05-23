@@ -7,20 +7,20 @@
  *
  */
 
-namespace dmzx\ultimatepoints\controller;
+namespace avathar\bbpoints\controller;
 
-use dmzx\ultimatepoints\core\functions_points;
-use dmzx\ultimatepoints\core\points_bank;
-use dmzx\ultimatepoints\core\points_bank_edit;
-use dmzx\ultimatepoints\core\points_info;
-use dmzx\ultimatepoints\core\points_logs;
-use dmzx\ultimatepoints\core\points_lottery;
-use dmzx\ultimatepoints\core\points_main;
-use dmzx\ultimatepoints\core\points_points_edit;
-use dmzx\ultimatepoints\core\points_robbery;
-use dmzx\ultimatepoints\core\points_robbery_user;
-use dmzx\ultimatepoints\core\points_transfer;
-use dmzx\ultimatepoints\core\points_transfer_user;
+use avathar\bbpoints\core\functions_points;
+use avathar\bbpoints\core\points_bank;
+use avathar\bbpoints\core\points_bank_edit;
+use avathar\bbpoints\core\points_info;
+use avathar\bbpoints\core\points_logs;
+use avathar\bbpoints\core\points_lottery;
+use avathar\bbpoints\core\points_main;
+use avathar\bbpoints\core\points_points_edit;
+use avathar\bbpoints\core\points_robbery;
+use avathar\bbpoints\core\points_robbery_user;
+use avathar\bbpoints\core\points_transfer;
+use avathar\bbpoints\core\points_transfer_user;
 use phpbb\auth\auth;
 use phpbb\config\config;
 use phpbb\controller\helper;
@@ -237,7 +237,7 @@ class main
 
 		// Add the base entry into the Nav Bar at top
 		$this->template->assign_block_vars('navlinks', [
-			'U_VIEW_FORUM' => $this->helper->route('dmzx_ultimatepoints_controller'),
+			'U_VIEW_FORUM' => $this->helper->route('avathar_bbpoints_controller'),
 			'FORUM_NAME' => sprintf($this->user->lang['POINTS_TITLE_MAIN'], $this->config['points_name']),
 		]);
 

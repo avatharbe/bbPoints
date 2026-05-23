@@ -7,7 +7,7 @@
  *
  */
 
-namespace dmzx\ultimatepoints\core;
+namespace avathar\bbpoints\core;
 
 use phpbb\auth\auth;
 use phpbb\config\config;
@@ -144,20 +144,20 @@ class points_lottery
 		// Check, if lottery is enabled
 		if (!$points_config['lottery_enable'])
 		{
-			$message = $this->user->lang['LOTTERY_DISABLED'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['LOTTERY_DISABLED'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
 		// Check, if user is allowed to use the lottery
 		if (!$this->auth->acl_get('u_use_lottery'))
 		{
-			$message = $this->user->lang['NOT_AUTHORISED'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['NOT_AUTHORISED'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
 		// Add part to bar
 		$this->template->assign_block_vars('navlinks', [
-			'U_VIEW_FORUM' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']),
+			'U_VIEW_FORUM' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']),
 			'FORUM_NAME' => $points_values['lottery_name'],
 		]);
 
@@ -199,28 +199,28 @@ class points_lottery
 			// Check, if the user tries to buy more tickets than allowed
 			if ($total_tickets_bought > $points_values['lottery_max_tickets'])
 			{
-				$message = sprintf($this->user->lang['LOTTERY_MAX_TICKETS_REACH'], $points_values['lottery_max_tickets']) . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = sprintf($this->user->lang['LOTTERY_MAX_TICKETS_REACH'], $points_values['lottery_max_tickets']) . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
 			// Check in user try to buy negative tickets
 			if ($total_tickets_bought <= 0)
 			{
-				$message = $this->user->lang['LOTTERY_NEGATIVE_TICKETS'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = $this->user->lang['LOTTERY_NEGATIVE_TICKETS'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
 			// Check, if the already bought tickets and the new request are higher than the max set number of tickets
 			if (($number_tickets + $total_tickets_bought) > $points_values['lottery_max_tickets'])
 			{
-				$message = sprintf($this->user->lang['LOTTERY_MAX_TICKETS_LEFT'], ($points_values['lottery_max_tickets'] - $number_tickets)) . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = sprintf($this->user->lang['LOTTERY_MAX_TICKETS_LEFT'], ($points_values['lottery_max_tickets'] - $number_tickets)) . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
 			// Check, if the user sent an empty value
 			if (!$total_tickets_bought)
 			{
-				$message = $this->user->lang['LOTTERY_INVALID_INPUT'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = $this->user->lang['LOTTERY_INVALID_INPUT'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
@@ -243,7 +243,7 @@ class points_lottery
 				// Check, if the user has enough cash to buy tickets
 				if ($points_values['lottery_ticket_cost'] * $total_tickets_bought > $purchaser['user_points'])
 				{
-					$message = $this->user->lang['LOTTERY_LACK_FUNDS'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+					$message = $this->user->lang['LOTTERY_LACK_FUNDS'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 					trigger_error($message);
 				}
 			}
@@ -281,7 +281,7 @@ class points_lottery
 				$this->functions_points->mchat_message($this->user->data['user_id'], $total_tickets_bought, $message, $name);
 			}
 
-			$message = $this->user->lang['LOTTERY_TICKET_PURCHASED'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['LOTTERY_TICKET_PURCHASED'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 
 			$this->template->assign_vars([
@@ -297,7 +297,7 @@ class points_lottery
 			// If no one has ever won, why bother doing anything else?
 			if ($points_values['points_winners_total'] = 0)
 			{
-				$message = $this->user->lang['LOTTERY_NO_WINNERS'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+				$message = $this->user->lang['LOTTERY_NO_WINNERS'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 				trigger_error($message);
 			}
 
@@ -320,17 +320,17 @@ class points_lottery
 
 				if ($total_wins == 0)
 				{
-					$message = sprintf($this->user->lang['LOTTERY_NEVER_WON'], $points_values['lottery_name']) . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+					$message = sprintf($this->user->lang['LOTTERY_NEVER_WON'], $points_values['lottery_name']) . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']) . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 					trigger_error($message);
 				}
 
 				$this->template->assign_vars([
-					'U_VIEW_HISTORY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery', 'history' => 'all']),
-					'U_TRANSFER_USER' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']),
-					'U_LOGS' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs']),
-					'U_LOTTERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']),
-					'U_BANK' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank']),
-					'U_ROBBERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery']),
+					'U_VIEW_HISTORY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery', 'history' => 'all']),
+					'U_TRANSFER_USER' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']),
+					'U_LOGS' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs']),
+					'U_LOTTERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']),
+					'U_BANK' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank']),
+					'U_ROBBERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery']),
 				]);
 			}
 
@@ -420,19 +420,19 @@ class points_lottery
 				]);
 
 				$this->template->assign_vars([
-					'U_VIEW_HISTORY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery', 'history' => 'all']),
-					'U_VIEW_SELF_HISTORY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery', 'history' => 'ego']),
-					'U_INFO' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'info']),
-					'U_TRANSFER_USER' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']),
-					'U_LOGS' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs']),
-					'U_LOTTERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']),
-					'U_BANK' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank']),
-					'U_ROBBERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery']),
+					'U_VIEW_HISTORY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery', 'history' => 'all']),
+					'U_VIEW_SELF_HISTORY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery', 'history' => 'ego']),
+					'U_INFO' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'info']),
+					'U_TRANSFER_USER' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']),
+					'U_LOGS' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs']),
+					'U_LOTTERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']),
+					'U_BANK' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank']),
+					'U_ROBBERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery']),
 				]);
 			}
 
 			//Start pagination
-			$this->pagination->generate_template_pagination($this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery', 'history' => $history_mode]), 'pagination', 'start', $total_entries, $number, $start);
+			$this->pagination->generate_template_pagination($this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery', 'history' => $history_mode]), 'pagination', 'start', $total_entries, $number, $start);
 
 			// Viewing a history page
 			$this->template->assign_vars([
@@ -441,13 +441,13 @@ class points_lottery
 				'LOTTERY_NAME' => $points_values['lottery_name'],
 				'BANK_NAME' => $points_values['bank_name'],
 				'S_VIEW_HISTORY' => true,
-				'U_BACK_TO_LOTTERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']),
-				'U_VIEW_SELF_HISTORY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery', 'history' => 'ego']),
-				'U_TRANSFER_USER' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']),
-				'U_LOGS' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs']),
-				'U_LOTTERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']),
-				'U_BANK' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank']),
-				'U_ROBBERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery']),
+				'U_BACK_TO_LOTTERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']),
+				'U_VIEW_SELF_HISTORY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery', 'history' => 'ego']),
+				'U_TRANSFER_USER' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']),
+				'U_LOGS' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs']),
+				'U_LOTTERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']),
+				'U_BANK' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank']),
+				'U_ROBBERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery']),
 			]);
 
 		} else
@@ -547,14 +547,14 @@ class points_lottery
 				'S_LOTTERY_ENABLE' => ($points_config['lottery_enable'] == 1) ? true : false,
 				'S_DRAWING_ENABLED' => ($points_values['lottery_draw_period']) ? true : false,
 				'U_PREVIOUS_WINNER' => $link_member,
-				'U_VIEW_HISTORY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery', 'history' => 'all']),
-				'U_VIEW_SELF_HISTORY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery', 'history' => 'ego']),
-				'U_TRANSFER_USER' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']),
-				'U_LOGS' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs']),
-				'U_LOTTERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']),
-				'U_BANK' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank']),
-				'U_ROBBERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery']),
-				'U_INFO' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'info']),
+				'U_VIEW_HISTORY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery', 'history' => 'all']),
+				'U_VIEW_SELF_HISTORY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery', 'history' => 'ego']),
+				'U_TRANSFER_USER' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']),
+				'U_LOGS' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs']),
+				'U_LOTTERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']),
+				'U_BANK' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank']),
+				'U_ROBBERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery']),
+				'U_INFO' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'info']),
 				'U_USE_TRANSFER' => $this->auth->acl_get('u_use_transfer'),
 				'U_USE_LOGS' => $this->auth->acl_get('u_use_logs'),
 				'U_USE_LOTTERY' => $this->auth->acl_get('u_use_lottery'),

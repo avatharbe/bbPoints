@@ -7,7 +7,7 @@
  *
  */
 
-namespace dmzx\ultimatepoints\core;
+namespace avathar\bbpoints\core;
 
 use phpbb\auth\auth;
 use phpbb\config\config;
@@ -320,12 +320,12 @@ class points_main
 			'LOTTERY_NAME' => $points_values['lottery_name'],
 			'BANK_NAME' => $points_values['bank_name'],
 			'S_DISPLAY_INDEX' => ($points_values['number_show_top_points'] > 0) ? true : false,
-			'U_TRANSFER_USER' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'transfer_user']),
-			'U_LOGS' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'logs']),
-			'U_LOTTERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'lottery']),
-			'U_BANK' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'bank']),
-			'U_ROBBERY' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'robbery']),
-			'U_INFO' => $this->helper->route('dmzx_ultimatepoints_controller', ['mode' => 'info']),
+			'U_TRANSFER_USER' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'transfer_user']),
+			'U_LOGS' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'logs']),
+			'U_LOTTERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'lottery']),
+			'U_BANK' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'bank']),
+			'U_ROBBERY' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'robbery']),
+			'U_INFO' => $this->helper->route('avathar_bbpoints_controller', ['mode' => 'info']),
 			'U_USE_TRANSFER' => $this->auth->acl_get('u_use_transfer'),
 			'U_USE_LOGS' => $this->auth->acl_get('u_use_logs'),
 			'U_USE_LOTTERY' => $this->auth->acl_get('u_use_lottery'),

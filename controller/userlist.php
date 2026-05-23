@@ -7,9 +7,9 @@
  *
  */
 
-namespace dmzx\ultimatepoints\controller;
+namespace avathar\bbpoints\controller;
 
-use dmzx\ultimatepoints\core\functions_points;
+use avathar\bbpoints\core\functions_points;
 use phpbb\config\config;
 use phpbb\controller\helper;
 use phpbb\db\driver\driver_interface;
@@ -101,7 +101,7 @@ class userlist
 		// UPlist disabled
 		if (!$points_config['uplist_enable'])
 		{
-			$message = $this->user->lang['POINTS_LIST_DISABLE'] . '<br /><br /><a href="' . $this->helper->route('dmzx_ultimatepoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
+			$message = $this->user->lang['POINTS_LIST_DISABLE'] . '<br /><br /><a href="' . $this->helper->route('avathar_bbpoints_controller') . '">&laquo; ' . $this->user->lang['BACK_TO_PREV'] . '</a>';
 			trigger_error($message);
 		}
 
@@ -139,7 +139,7 @@ class userlist
 		$this->db->sql_freeresult($result);
 
 		//Start pagination
-		$pagination_url = $this->helper->route('dmzx_ultimatepoints_list_controller');
+		$pagination_url = $this->helper->route('avathar_bbpoints_list_controller');
 		$this->pagination->generate_template_pagination($pagination_url, 'pagination', 'start', $ultimatepoints_total, $limit, $start);
 
 		$this->template->assign_vars([

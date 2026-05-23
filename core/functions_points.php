@@ -7,7 +7,7 @@
  *
  */
 
-namespace dmzx\ultimatepoints\core;
+namespace avathar\bbpoints\core;
 
 use parse_message;
 use phpbb\cache\service;
@@ -281,21 +281,28 @@ class functions_points
 		int $credit_subledger_user = 0
 	): void
 	{
-		if ($this->bbaccounts_ledger === null)
-		{
-			return;
-		}
+		// v2.0: bbAccounts is the canonical store and a hard dependency.
+		// The ledger is always present; the four legacy mutators below
+		// (add_points/substract_points/set_points/set_bank) are no-ops;
+		// this method is the sole writer of the cache columns.
 
 		$debit_acct = (int) $this->config['ultimatepoints_acct_' . $debit_role];
 		$credit_acct = (int) $this->config['ultimatepoints_acct_' . $credit_role];
 
 		if ($debit_acct === 0 || $credit_acct === 0)
 		{
-			// Partial mapping or fully-unmapped role pair — skip the
-			// bbAccounts post. Legacy denormalised storage continues
-			// to work as before; the admin can complete the mapping
-			// later and history will simply be missing entries from
-			// before that point.
+			// Partial mapping or fully-unmapped role pair — admin hasn't
+			// completed the bbAccounts Mapping ACP screen yet. Skip the
+			// ledger post AND the cache refresh; surface the gap in the
+			// admin log so the maintainer notices and finishes mapping.
+			$this->log->add(
+				'admin',
+				(int) $this->user->data['user_id'],
+				$this->user->data['user_ip'],
+				'LOG_BBPOINTS_ROLE_UNMAPPED',
+				false,
+				[$debit_role . '/' . $credit_role]
+			);
 			return;
 		}
 
@@ -322,18 +329,17 @@ class functions_points
 				],
 				'auto',
 				$reference_id,
-				'dmzx.ultimatepoints',
+				'avathar.bbpoints',
 				(int) $this->user->data['user_id']
 			);
 		}
 		catch (\Throwable $e)
 		{
-			// bbAccounts ledger refused the entry — log and continue.
-			// Phase B-2 is dual-write: the legacy `user_points` UPDATE
-			// has already happened (or is about to), so user-visible
-			// behaviour is unaffected. Failing here would only cause
-			// the surrounding feature (post submission, etc.) to break
-			// for an admin-side bookkeeping problem.
+			// bbAccounts ledger refused the entry. This is a real problem
+			// in v2.0 — the ledger is authoritative, so a rejected post
+			// means user-visible state diverges from the ledger. Log it
+			// and let the caller see the exception; they can decide whether
+			// to surface to the user or swallow.
 			$this->log->add(
 				'critical',
 				(int) $this->user->data['user_id'],
@@ -342,26 +348,19 @@ class functions_points
 				false,
 				[$debit_role . '/' . $credit_role, $e->getMessage()]
 			);
-			return;
+			throw $e;
 		}
 
-		// Phase E — canonical mode. When the admin has flipped the
-		// `ultimatepoints_bbaccounts_canonical` flag, the legacy
-		// add_points/substract_points/set_points/set_bank functions
-		// no-op (see early-returns at the top of each); this block is
-		// then the *only* writer of the cache columns. Direction comes
-		// from the role enum: wallet/bank legs in the debit slot mean
-		// the corresponding user loses; in the credit slot means gains.
-		if ((int) $this->config['ultimatepoints_bbaccounts_canonical'] === 1)
-		{
-			$this->refresh_legacy_cache_columns(
-				$debit_role,
-				$credit_role,
-				$amount,
-				$debit_subledger_user,
-				$credit_subledger_user
-			);
-		}
+		// Refresh the denormalised cache columns for the affected users.
+		// In v2.0 this is unconditional — the cache must stay in sync
+		// with the ledger after every post.
+		$this->refresh_legacy_cache_columns(
+			$debit_role,
+			$credit_role,
+			$amount,
+			$debit_subledger_user,
+			$credit_subledger_user
+		);
 	}
 
 	/**
@@ -417,141 +416,54 @@ class functions_points
 	}
 
 	/**
-	 * Returns true when canonical mode is on — the four legacy mutators
-	 * below all early-return in that case so they don't double-update the
-	 * cache columns that `refresh_legacy_cache_columns()` now maintains.
-	 */
-	private function bbaccounts_canonical_mode(): bool
-	{
-		return (int) $this->config['ultimatepoints_bbaccounts_canonical'] === 1;
-	}
-
-	/**
-	 * Add points to user
+	 * Legacy mutator — v2.0 no-op.
+	 *
+	 * Retained for source-compat with existing call sites that pair this
+	 * with a `post_to_ledger()` call. The ledger post is now the sole
+	 * writer of `phpbb_users.user_points`; this method does nothing.
+	 *
+	 * @deprecated since 2.0.0 — call `post_to_ledger($debit_role, 'user_wallets', $amount, ...)` instead.
 	 */
 	function add_points($user_id, $amount)
 	{
-		// Phase E — canonical mode no-op. post_to_ledger() refreshes
-		// the cache column directly via refresh_legacy_cache_columns().
-		if ($this->bbaccounts_canonical_mode())
-		{
-			return;
-		}
-		// Select users current points
-		$sql_array = [
-			'SELECT' => 'user_points',
-			'FROM' => [
-				USERS_TABLE => 'u',
-			],
-			'WHERE' => 'user_id = ' . (int) $user_id,
-		];
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$result = $this->db->sql_query($sql);
-		$user_points = $this->db->sql_fetchfield('user_points');
-		$this->db->sql_freeresult($result);
-
-		// Add the points
-		$data = [
-			'user_points' => $user_points + $amount
-		];
-
-		$sql = 'UPDATE ' . USERS_TABLE . '
-			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
-			WHERE user_id = ' . (int) $user_id;
-		$this->db->sql_query($sql);
-
 		return;
 	}
 
 	/**
-	 * Substract points from user
+	 * Legacy mutator — v2.0 no-op. See `add_points()`.
+	 *
+	 * @deprecated since 2.0.0 — call `post_to_ledger('user_wallets', $credit_role, $amount, ...)` instead.
 	 */
 	function substract_points($user_id, $amount)
 	{
-		// Phase E — canonical mode no-op.
-		if ($this->bbaccounts_canonical_mode())
-		{
-			return;
-		}
-		// Select users current points
-		$sql_array = [
-			'SELECT' => 'user_points',
-			'FROM' => [
-				USERS_TABLE => 'u',
-			],
-			'WHERE' => 'user_id = ' . (int) $user_id,
-		];
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-		$result = $this->db->sql_query($sql);
-		$user_points = $this->db->sql_fetchfield('user_points');
-		$this->db->sql_freeresult($result);
-
-		// Update the points
-		$data = [
-			'user_points' => $user_points - $amount
-		];
-
-		$sql = 'UPDATE ' . USERS_TABLE . '
-			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
-			WHERE user_id = ' . (int) $user_id;
-		$this->db->sql_query($sql);
-
 		return;
 	}
 
 	/**
-	 * Set the amount of points to user
+	 * Legacy mutator — v2.0 no-op.
+	 *
+	 * 'Set' semantics are not expressible as a single ledger entry (which
+	 * has debit/credit legs but no "set absolute" operation). Admin paths
+	 * that need to set a balance to an exact value should compute the
+	 * delta against the current balance and call `post_to_ledger()` with
+	 * the right role pair. In v2.0, this method silently no-ops; calls
+	 * from the admin manual-set and group-transfer-set paths are a
+	 * known gap pending fix.
+	 *
+	 * @deprecated since 2.0.0
 	 */
 	function set_points($user_id, $amount)
 	{
-		// Phase E — canonical mode no-op. Note: 'set' semantics aren't
-		// covered by post_to_ledger (which only does add/subtract via
-		// debit/credit legs); the admin manual-set + admin group-set
-		// paths are deferred B-2 follow-ups, so they continue using
-		// this legacy SET unless the admin has flipped canonical mode.
-		// In canonical mode, set-mode operations effectively become
-		// no-ops on user_points — admins should use add/subtract instead.
-		if ($this->bbaccounts_canonical_mode())
-		{
-			return;
-		}
-		// Set users new points
-		$data = [
-			'user_points' => $amount
-		];
-
-		$sql = 'UPDATE ' . USERS_TABLE . '
-			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
-			WHERE user_id = ' . (int) $user_id;
-		$this->db->sql_query($sql);
-
 		return;
 	}
 
 	/**
-	 * Set the amount of bank points to user
+	 * Legacy mutator — v2.0 no-op. See `set_points()`.
+	 *
+	 * @deprecated since 2.0.0
 	 */
 	function set_bank($user_id, $amount)
 	{
-		// Phase E — canonical mode no-op. (Bank deposit/withdraw call
-		// sites pair `set_bank` with `add_points`/`substract_points`
-		// today; in canonical mode `post_to_ledger('user_wallets',
-		// 'bank_holdings', ...)` already updates both cache columns
-		// via refresh_legacy_cache_columns.)
-		if ($this->bbaccounts_canonical_mode())
-		{
-			return;
-		}
-		// Set users new holding
-		$data = [
-			'holding' => $amount
-		];
-
-		$sql = 'UPDATE ' . $this->points_bank_table . '
-			SET ' . $this->db->sql_build_array('UPDATE', $data) . '
-			WHERE user_id = ' . (int) $user_id;
-		$this->db->sql_query($sql);
-
 		return;
 	}
 
@@ -577,69 +489,36 @@ class functions_points
 		$time = time();
 		$this->set_points_values('bank_last_restocked', $time);
 
-		// bbAccounts dual-write (Phase B-2 slice 3). Pre-fetch per-user
-		// amounts so we can post one journal entry per affected user
-		// AND keep the existing bulk UPDATE for the legacy column. The
-		// SELECT runs before the UPDATE, so `holding` reflects the
-		// pre-interest balance — the math here mirrors the SQL exactly.
-		// No-op when ledger absent or roles unmapped.
+		// v2.0: per-user ledger post for interest accrual. The cache column
+		// (phpbb_points_bank.holding) is refreshed by post_to_ledger via
+		// refresh_legacy_cache_columns — no separate bulk UPDATE needed.
+		// Roles must be mapped; post_to_ledger logs unmapped pairs.
 		$where_interest = 'holding < ' . (int) $points_values['bank_interestcut']
 			. ' OR ' . (int) $points_values['bank_interestcut'] . ' = 0';
-		if ($this->bbaccounts_ledger !== null
-			&& (int) $this->config['ultimatepoints_acct_exp_bank_int'] > 0
-			&& (int) $this->config['ultimatepoints_acct_bank_holdings'] > 0)
+		$sql = 'SELECT user_id, holding FROM ' . $this->points_bank_table . ' WHERE ' . $where_interest;
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$sql = 'SELECT user_id, holding FROM ' . $this->points_bank_table . ' WHERE ' . $where_interest;
+			$interest_amount = round($row['holding'] / 100 * $points_values['bank_interest']);
+			if ($interest_amount > 0)
+			{
+				$this->post_to_ledger('exp_bank_int', 'bank_holdings', $interest_amount, 'Bank interest accrual', 0, 0, (int) $row['user_id']);
+			}
+		}
+		$this->db->sql_freeresult($result);
+
+		// Maintain the bank fees — per-user ledger post for each account
+		// whose holding exceeds the fee threshold.
+		if ($points_values['bank_cost'] <> '0')
+		{
+			$sql = 'SELECT user_id FROM ' . $this->points_bank_table
+				. ' WHERE holding >= ' . (int) $points_values['bank_cost'];
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$interest_amount = round($row['holding'] / 100 * $points_values['bank_interest']);
-				if ($interest_amount > 0)
-				{
-					$this->post_to_ledger('exp_bank_int', 'bank_holdings', $interest_amount, 'Bank interest accrual', 0, 0, (int) $row['user_id']);
-				}
+				$this->post_to_ledger('bank_holdings', 'rev_bank_fees', (int) $points_values['bank_cost'], 'Bank maintenance fee', 0, (int) $row['user_id'], 0);
 			}
 			$this->db->sql_freeresult($result);
-		}
-
-		// Pay the users (legacy bulk UPDATE). Skipped in canonical mode —
-		// post_to_ledger above already updated `holding` per user via
-		// refresh_legacy_cache_columns.
-		if (!$this->bbaccounts_canonical_mode())
-		{
-			$sql = 'UPDATE ' . $this->points_bank_table . '
-				SET holding = holding + round((holding / 100) * ' . $points_values['bank_interest'] . ')
-				WHERE ' . $where_interest;
-			$this->db->sql_query($sql);
-		}
-
-		// Maintain the bank costs
-		if ($points_values['bank_cost'] <> '0')
-		{
-			// bbAccounts dual-write (Phase B-2 slice 3). Same pattern.
-			if ($this->bbaccounts_ledger !== null
-				&& (int) $this->config['ultimatepoints_acct_bank_holdings'] > 0
-				&& (int) $this->config['ultimatepoints_acct_rev_bank_fees'] > 0)
-			{
-				$sql = 'SELECT user_id FROM ' . $this->points_bank_table
-					. ' WHERE holding >= ' . (int) $points_values['bank_cost'];
-				$result = $this->db->sql_query($sql);
-				while ($row = $this->db->sql_fetchrow($result))
-				{
-					$this->post_to_ledger('bank_holdings', 'rev_bank_fees', (int) $points_values['bank_cost'], 'Bank maintenance fee', 0, (int) $row['user_id'], 0);
-				}
-				$this->db->sql_freeresult($result);
-			}
-
-			// Legacy bulk UPDATE — skipped in canonical mode (per-user
-			// post_to_ledger above already maintains the cache column).
-			if (!$this->bbaccounts_canonical_mode())
-			{
-				$sql = 'UPDATE ' . $this->points_bank_table . '
-					SET holding = holding - ' . (int) $points_values['bank_cost'] . '
-					WHERE holding >= ' . (int) $points_values['bank_cost'] . '';
-				$this->db->sql_query($sql);
-			}
 		}
 	}
 
@@ -820,7 +699,7 @@ class functions_points
 					'receiver' => (int) $winner['user_id'],
 					'mode' => 'lottery', // The mode where the notification sends the user to
 				];
-				$this->notification_manager->add_notifications('dmzx.ultimatepoints.notification.type.points', $data);
+				$this->notification_manager->add_notifications('avathar.bbpoints.notification.type.points', $data);
 
 				// Update winners total
 				$this->set_points_values('lottery_winners_total', $points_values['lottery_winners_total'] + 1);
@@ -1028,7 +907,7 @@ class functions_points
 				'receiver' => (int) $user_id,
 				'mode' => 'logs', // The mode where the notification sends the user to
 			];
-			$this->notification_manager->add_notifications('dmzx.ultimatepoints.notification.type.points', $data);
+			$this->notification_manager->add_notifications('avathar.bbpoints.notification.type.points', $data);
 
 			$sql_array = [
 				'SELECT' => 'username',
@@ -1048,7 +927,7 @@ class functions_points
 
 	function assign_authors()
 	{
-		$md_manager = $this->extension_manager->create_extension_metadata_manager('dmzx/ultimatepoints', $this->template);
+		$md_manager = $this->extension_manager->create_extension_metadata_manager('avathar/bbpoints', $this->template);
 		$meta = $md_manager->get_metadata();
 
 		$author_names = [];

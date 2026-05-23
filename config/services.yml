@@ -1,10 +1,10 @@
 imports:
   - { resource: 'tables.yml' }
 services:
-  dmzx.ultimatepoints.listener:
-    class: 'dmzx\ultimatepoints\event\listener'
+  avathar.bbpoints.listener:
+    class: 'avathar\bbpoints\event\listener'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@user'
       - '@template'
       - '@dbal.conn'
@@ -15,33 +15,33 @@ services:
       - '@request'
       - '%core.root_path%'
       - '%core.php_ext%'
-      - '%dmzx.ultimatepoints.table.points.bank%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.bank%'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.values%'
       # Phase D — bbAccounts read switchover. Nullable: present only when
       # bbAccounts is installed. The listener auto-detects (mapped + backfilled)
       # and falls back to the legacy column otherwise. Uses the ledger
       # service (not balance_summary) because the navbar/profile reads need
       # wallet-only balances, not per-currency pool aggregates.
-      - '@?avathar.bbaccounts.service.ledger'
+      - '@avathar.bbaccounts.service.ledger'
     tags:
       - { name: 'event.listener' }
 
-  dmzx.ultimatepoints.controller:
-    class: 'dmzx\ultimatepoints\controller\main'
+  avathar.bbpoints.controller:
+    class: 'avathar\bbpoints\controller\main'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
-      - '@dmzx.ultimatepoints.core.points.main'
-      - '@dmzx.ultimatepoints.core.points.info'
-      - '@dmzx.ultimatepoints.core.points.transfer.user'
-      - '@dmzx.ultimatepoints.core.points.bank'
-      - '@dmzx.ultimatepoints.core.points.logs'
-      - '@dmzx.ultimatepoints.core.points.bank.edit'
-      - '@dmzx.ultimatepoints.core.points.lottery'
-      - '@dmzx.ultimatepoints.core.points.points.edit'
-      - '@dmzx.ultimatepoints.core.points.robbery'
-      - '@dmzx.ultimatepoints.core.points.robbery.user'
-      - '@dmzx.ultimatepoints.core.points.transfer'
+      - '@avathar.bbpoints.core.functions.points'
+      - '@avathar.bbpoints.core.points.main'
+      - '@avathar.bbpoints.core.points.info'
+      - '@avathar.bbpoints.core.points.transfer.user'
+      - '@avathar.bbpoints.core.points.bank'
+      - '@avathar.bbpoints.core.points.logs'
+      - '@avathar.bbpoints.core.points.bank.edit'
+      - '@avathar.bbpoints.core.points.lottery'
+      - '@avathar.bbpoints.core.points.points.edit'
+      - '@avathar.bbpoints.core.points.robbery'
+      - '@avathar.bbpoints.core.points.robbery.user'
+      - '@avathar.bbpoints.core.points.transfer'
       - '@template'
       - '@user'
       - '@auth'
@@ -51,13 +51,13 @@ services:
       - '@controller.helper'
       - '%core.root_path%'
       - '%core.php_ext%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.values%'
 
-  dmzx.ultimatepoints.list.controller:
-    class: 'dmzx\ultimatepoints\controller\userlist'
+  avathar.bbpoints.list.controller:
+    class: 'avathar\bbpoints\controller\userlist'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@template'
       - '@user'
       - '@dbal.conn'
@@ -65,13 +65,13 @@ services:
       - '@config'
       - '@pagination'
       - '@controller.helper'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.values%'
 
-  dmzx.ultimatepoints.admin.controller:
-    class: 'dmzx\ultimatepoints\controller\admin_controller'
+  avathar.bbpoints.admin.controller:
+    class: 'avathar\bbpoints\controller\admin_controller'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@template'
       - '@user'
       - '@auth'
@@ -82,13 +82,13 @@ services:
       - '@service_container'
       - '%core.root_path%'
       - '%core.php_ext%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.values%'
-      - '%dmzx.ultimatepoints.table.points.log%'
-      - '%dmzx.ultimatepoints.table.points.lottery.history%'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.log%'
+      - '%avathar.bbpoints.table.points.lottery.history%'
 
-  dmzx.ultimatepoints.notification.type.points:
-    class: 'dmzx\ultimatepoints\notification\points'
+  avathar.bbpoints.notification.type.points:
+    class: 'avathar\bbpoints\notification\points'
     shared: false # service MUST not be shared for this to work!
     parent: notification.type.base
     calls:
@@ -97,8 +97,8 @@ services:
     tags:
       - { name: notification.type }
 
-  dmzx.ultimatepoints.core.functions.points:
-    class: 'dmzx\ultimatepoints\core\functions_points'
+  avathar.bbpoints.core.functions.points:
+    class: 'avathar\bbpoints\core\functions_points'
     arguments:
       - '@template'
       - '@user'
@@ -113,19 +113,19 @@ services:
       - '@service_container'
       - '%core.php_ext%'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.bank%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.lottery.history%'
-      - '%dmzx.ultimatepoints.table.points.lottery.tickets%'
-      - '%dmzx.ultimatepoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.bank%'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.lottery.history%'
+      - '%avathar.bbpoints.table.points.lottery.tickets%'
+      - '%avathar.bbpoints.table.points.values%'
       # bbAccounts ledger (Phase B-1 wiring; consumed in B-2). Nullable —
       # UltimatePoints loads and runs normally when bbAccounts is absent.
-      - '@?avathar.bbaccounts.service.ledger'
+      - '@avathar.bbaccounts.service.ledger'
 
-  dmzx.ultimatepoints.core.points.main:
-    class: 'dmzx\ultimatepoints\core\points_main'
+  avathar.bbpoints.core.points.main:
+    class: 'avathar\bbpoints\core\points_main'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -133,16 +133,16 @@ services:
       - '@config'
       - '@controller.helper'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.bank%'
-      - '%dmzx.ultimatepoints.table.points.values%'
-      - '%dmzx.ultimatepoints.table.points.log%'
-      - '%dmzx.ultimatepoints.table.points.lottery.tickets%'
-      - '%dmzx.ultimatepoints.table.points.lottery.history%'
+      - '%avathar.bbpoints.table.points.bank%'
+      - '%avathar.bbpoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.log%'
+      - '%avathar.bbpoints.table.points.lottery.tickets%'
+      - '%avathar.bbpoints.table.points.lottery.history%'
 
-  dmzx.ultimatepoints.core.points.info:
-    class: 'dmzx\ultimatepoints\core\points_info'
+  avathar.bbpoints.core.points.info:
+    class: 'avathar\bbpoints\core\points_info'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@dbal.conn'
       - '@template'
@@ -150,12 +150,12 @@ services:
       - '@config'
       - '@controller.helper'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.values%'
 
-  dmzx.ultimatepoints.core.points.transfer.user:
-    class: 'dmzx\ultimatepoints\core\points_transfer_user'
+  avathar.bbpoints.core.points.transfer.user:
+    class: 'avathar\bbpoints\core\points_transfer_user'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -167,14 +167,14 @@ services:
       - '@service_container'
       - '%core.php_ext%'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.log%'
-      - '%dmzx.ultimatepoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.log%'
+      - '%avathar.bbpoints.table.points.values%'
 
-  dmzx.ultimatepoints.core.points.bank:
-    class: 'dmzx\ultimatepoints\core\points_bank'
+  avathar.bbpoints.core.points.bank:
+    class: 'avathar\bbpoints\core\points_bank'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -186,14 +186,14 @@ services:
       - '@notification_manager'
       - '%core.php_ext%'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.bank%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.bank%'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.values%'
 
-  dmzx.ultimatepoints.core.points.logs:
-    class: 'dmzx\ultimatepoints\core\points_logs'
+  avathar.bbpoints.core.points.logs:
+    class: 'avathar\bbpoints\core\points_logs'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -204,13 +204,13 @@ services:
       - '@pagination'
       - '%core.php_ext%'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.log%'
-      - '%dmzx.ultimatepoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.log%'
+      - '%avathar.bbpoints.table.points.values%'
 
-  dmzx.ultimatepoints.core.points.bank.edit:
-    class: 'dmzx\ultimatepoints\core\points_bank_edit'
+  avathar.bbpoints.core.points.bank.edit:
+    class: 'avathar\bbpoints\core\points_bank_edit'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -222,12 +222,12 @@ services:
       - '@log'
       - '%core.php_ext%'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.bank%'
+      - '%avathar.bbpoints.table.points.bank%'
 
-  dmzx.ultimatepoints.core.points.lottery:
-    class: 'dmzx\ultimatepoints\core\points_lottery'
+  avathar.bbpoints.core.points.lottery:
+    class: 'avathar\bbpoints\core\points_lottery'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -239,15 +239,15 @@ services:
       - '@service_container'
       - '%core.php_ext%'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.values%'
-      - '%dmzx.ultimatepoints.table.points.lottery.history%'
-      - '%dmzx.ultimatepoints.table.points.lottery.tickets%'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.lottery.history%'
+      - '%avathar.bbpoints.table.points.lottery.tickets%'
 
-  dmzx.ultimatepoints.core.points.points.edit:
-    class: 'dmzx\ultimatepoints\core\points_points_edit'
+  avathar.bbpoints.core.points.points.edit:
+    class: 'avathar\bbpoints\core\points_points_edit'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -259,10 +259,10 @@ services:
       - '%core.php_ext%'
       - '%core.root_path%'
 
-  dmzx.ultimatepoints.core.points.robbery:
-    class: 'dmzx\ultimatepoints\core\points_robbery'
+  avathar.bbpoints.core.points.robbery:
+    class: 'avathar\bbpoints\core\points_robbery'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -274,13 +274,13 @@ services:
       - '@service_container'
       - '%core.php_ext%'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.values%'
-      - '%dmzx.ultimatepoints.table.points.log%'
-  dmzx.ultimatepoints.core.points.robbery.user:
-    class: 'dmzx\ultimatepoints\core\points_robbery_user'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.log%'
+  avathar.bbpoints.core.points.robbery.user:
+    class: 'avathar\bbpoints\core\points_robbery_user'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -292,13 +292,13 @@ services:
       - '@service_container'
       - '%core.php_ext%'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.values%'
-      - '%dmzx.ultimatepoints.table.points.log%'
-  dmzx.ultimatepoints.core.points.transfer:
-    class: 'dmzx\ultimatepoints\core\points_transfer'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.log%'
+  avathar.bbpoints.core.points.transfer:
+    class: 'avathar\bbpoints\core\points_transfer'
     arguments:
-      - '@dmzx.ultimatepoints.core.functions.points'
+      - '@avathar.bbpoints.core.functions.points'
       - '@auth'
       - '@template'
       - '@user'
@@ -310,6 +310,6 @@ services:
       - '@service_container'
       - '%core.php_ext%'
       - '%core.root_path%'
-      - '%dmzx.ultimatepoints.table.points.log%'
-      - '%dmzx.ultimatepoints.table.points.config%'
-      - '%dmzx.ultimatepoints.table.points.values%'
+      - '%avathar.bbpoints.table.points.log%'
+      - '%avathar.bbpoints.table.points.config%'
+      - '%avathar.bbpoints.table.points.values%'
