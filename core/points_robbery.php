@@ -264,18 +264,8 @@ class points_robbery
 				// entry — same atomicity bug fix as the transfer flow.
 				$this->functions_points->post_to_ledger('user_wallets', 'user_wallets', $attacked_amount, 'Robbery', 0, (int) $user_id, (int) $this->user->data['user_id']);
 
-				// Add robbery to the log
-				$sql = 'INSERT INTO ' . $this->points_log_table . ' ' . $this->db->sql_build_array('INSERT', [
-						'point_send' => (int) $this->user->data['user_id'],
-						'point_recv' => $user_id,
-						'point_amount' => $attacked_amount,
-						'point_sendold' => $this->user->data['user_points'],
-						'point_recvold' => $pointsa,
-						'point_comment' => '',
-						'point_type' => '3',
-						'point_date' => time(),
-					]);
-				$this->db->sql_query($sql);
+				// v2.0: phpbb_points_log dropped. The bbAccounts journal entry
+				// posted above (post_to_ledger) is the audit trail.
 
 				if ($points_config['robbery_notify'])
 				{

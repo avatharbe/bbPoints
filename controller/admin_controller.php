@@ -233,21 +233,10 @@ class admin_controller
 					trigger_error($this->user->lang['NO_AUTH_OPERATION'] . adm_back_link($this->u_action), E_USER_WARNING);
 				}
 
-				$sql_layer = $this->db->get_sql_layer();
-				switch ($sql_layer)
-				{
-					case 'sqlite':
-					case 'firebird':
-						$this->db->sql_query('DELETE FROM ' . $this->points_log_table);
-						break;
-
-					default:
-						$this->db->sql_query('DELETE FROM ' . $this->points_log_table);
-						break;
-				}
-
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->data['user_ip'], 'LOG_RESYNC_POINTSLOGSCOUNTS');
-				trigger_error($this->user->lang['LOG_RESYNC_POINTSLOGSCOUNTS'] . adm_back_link($this->u_action));
+				// v2.0: phpbb_points_log dropped. The audit trail is in
+				// the bbAccounts ledger; bulk-purging that is done via the
+				// bbAccounts ACP, not from here.
+				trigger_error('phpbb_points_log no longer exists in v2.0. Use the bbAccounts ACP to manage the journal audit trail.' . adm_back_link($this->u_action));
 			} // Create a confirmbox with yes and no.
 			else
 			{

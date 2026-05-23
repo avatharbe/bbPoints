@@ -81,7 +81,7 @@ class ucp_main_module
 		}
 		$db->sql_freeresult($result);
 
-		$this->tpl_name = 'points/ucp_ultimatepoints';
+		$this->tpl_name = 'points/ucp_main';
 		$this->page_title = $user->lang['UCP_ULTIMATEPOINTS_TITLE'];
 
 		$template->assign_vars([
@@ -116,7 +116,7 @@ class ucp_main_module
 		}
 		$db->sql_freeresult($result);
 
-		$this->tpl_name = 'points/ucp_ultimatepoints';
+		$this->tpl_name = 'points/ucp_main';
 		$this->page_title = $user->lang['UCP_ULTIMATEPOINTS_TITLE'];
 
 		$template->assign_vars([
@@ -131,30 +131,15 @@ class ucp_main_module
 
 	public function robbery_info()
 	{
-		global $db, $user, $template;
+		global $user, $template;
 
 		$points_config = $this->config_info();
 
-		$sql = 'SELECT *
-			FROM ' . $this->points_log_table . ' l
-				LEFT JOIN ' . USERS_TABLE . ' u
-				ON l.point_send = u.user_id
-			WHERE l.point_recv = ' . (int) $user->data['user_id'] . '
-			AND l.point_type = 3
-			ORDER BY l.point_date DESC';
-		$result = $db->sql_query($sql);
-
-		while ($row = $db->sql_fetchrow())
-		{
-			$template->assign_block_vars('ucp_ultimatepoints_robbery', [
-				'ROBBERY_USERNAME' => get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-				'ROBBERY_AMOUNT' => $row['point_amount'],
-				'ROBBERY_TIME' => $user->format_date($row['point_date']),
-			]);
-		}
-		$db->sql_freeresult($result);
-
-		$this->tpl_name = 'points/ucp_ultimatepoints';
+		// v2.0: phpbb_points_log dropped. Robbery history is in the bbAccounts
+		// ledger (filter the user-wallets subledger by counter-account and
+		// description). A per-user bbAccounts-backed view is a follow-up;
+		// for now the section renders with no rows.
+		$this->tpl_name = 'points/ucp_main';
 		$this->page_title = $user->lang['UCP_ULTIMATEPOINTS_TITLE'];
 
 		$template->assign_vars([
@@ -165,30 +150,13 @@ class ucp_main_module
 
 	public function transfer_info()
 	{
-		global $db, $user, $template, $config;
+		global $user, $template, $config;
 
 		$points_config = $this->config_info();
 
-		$sql = 'SELECT *
-			FROM ' . $this->points_log_table . ' l
-				LEFT JOIN ' . USERS_TABLE . ' u
-				ON l.point_send = u.user_id
-			WHERE l.point_recv = ' . (int) $user->data['user_id'] . '
-			AND l.point_type = 1
-			ORDER BY l.point_date DESC';
-		$result = $db->sql_query($sql);
-
-		while ($row = $db->sql_fetchrow())
-		{
-			$template->assign_block_vars('ucp_ultimatepoints_transfer', [
-				'TRANSFER_USERNAME' => get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
-				'TRANSFER_AMOUNT' => $row['point_amount'],
-				'TRANSFER_TIME' => $user->format_date($row['point_date']),
-			]);
-		}
-		$db->sql_freeresult($result);
-
-		$this->tpl_name = 'points/ucp_ultimatepoints';
+		// v2.0: phpbb_points_log dropped. Transfer history is in the bbAccounts
+		// ledger. See robbery_info() — same pattern.
+		$this->tpl_name = 'points/ucp_main';
 		$this->page_title = $user->lang['UCP_ULTIMATEPOINTS_TITLE'];
 
 		$template->assign_vars([

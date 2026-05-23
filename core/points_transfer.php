@@ -206,20 +206,10 @@ class points_transfer
 			// Get current time for logs
 			$current_time = time();
 
-			// Add transfer information to the log
+			// v2.0: phpbb_points_log dropped. The bbAccounts journal entry
+			// posted by post_to_ledger() is the audit trail. Comment text
+			// is preserved in the journal entry's description field.
 			$text = $message;
-
-			$sql = 'INSERT INTO ' . $this->points_log_table . ' ' . $this->db->sql_build_array('INSERT', [
-				'point_send' => (int) $this->user->data['user_id'],
-				'point_recv' => (int) $checked_user['user_id'],
-				'point_amount' => $am,
-				'point_sendold' => $this->user->data['user_points'],
-				'point_recvold' => $checked_user['user_points'],
-				'point_comment' => $text,
-				'point_type' => '1',
-				'point_date' => $current_time,
-			]);
-			$this->db->sql_query($sql);
 
 			// Increase our notification sent counter
 			$this->config->increment('points_notification_id', 1);

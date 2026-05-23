@@ -236,43 +236,10 @@ class points_main
 		}
 		$this->db->sql_freeresult($result); // Free the results
 
-		// Most Donations Given
-		$sql_array = [
-			'SELECT' => 'lt.point_send, u.user_id, u.username, u.user_colour, SUM(lt.point_amount) AS total_donated',
-
-			'FROM' => [
-				$this->points_log_table => 'lt',
-			],
-
-			'LEFT_JOIN' => [
-				[
-					'FROM' => [USERS_TABLE => 'u'],
-					'ON' => 'u.user_id = lt.point_send',
-				]
-			],
-
-			'GROUP_BY' => 'lt.point_send',
-
-			'ORDER_BY' => 'total_donated DESC',
-		];
-
-		// Build the query...
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-
-		// Run the query...
-		$result = $this->db->sql_query_limit($sql, 5); // only get 5 most generous users..
-
-		// md_ is Most Donated
-		while ($md_row = $this->db->sql_fetchrow($result))
-		{
-			$md_username = get_username_string('full', $md_row['user_id'], $md_row['username'], $md_row['user_colour']);
-
-			$this->template->assign_block_vars('most_donated', [
-				'USER' => $md_username,
-				'DONATED' => $md_row['total_donated'],
-			]);
-		}
-		$this->db->sql_freeresult($result); // Free the results
+		// Most Donations Given — v2.0: phpbb_points_log dropped. The transfer
+		// history lives in bbAccounts (filter user_wallets subledger for entries
+		// posted by avathar.bbpoints with a non-self counter-leg). A
+		// bbAccounts-backed aggregate query is a follow-up; for now no rows.
 
 		// Most Lotteries Won
 		$sql_array = [
